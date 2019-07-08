@@ -18,7 +18,6 @@ var oauth = {
 
 // CODEF API Callback
 var codefApiCallback = function(response){
-  console.log('======================================= codefApiCallback =======================================');
   console.log('Headers: ' + JSON.stringify(response.headers));
   console.log('Status: ' + response.statusCode);
 
