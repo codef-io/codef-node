@@ -111,6 +111,6 @@ var req = http.request({
 }, codefApiCallback);
 req.write(
   // setBodyData
-  JSON.stringify("{'connected_id':'9LUm.uhVQbzaangazwI0tr','organization':'0011'}")
+  '{"connected_id":"9LUm.uhVQbzaangazwI0tr","organization":"0011"}'
 );
 req.end();
