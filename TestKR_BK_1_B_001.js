@@ -1,7 +1,7 @@
 var http = require('http');
 var urlencode = require('urlencode');
 
-// CODEF Host
+// CODEF
 var codef = {
   host : '192.168.10.126',
   port : '10001',
@@ -9,6 +9,7 @@ var codef = {
   account_list_path : '/v1/kr/bank/b/account/account-list'
 }
 
+// OAuth
 var oauth = {
   token_url : '192.168.10.126',
   token_port : '8888',
