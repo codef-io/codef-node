@@ -6,7 +6,7 @@ var codef = {
   host : '192.168.10.126',
   port : '10001',
   // 은행 법인 보유계좌 Task
-  account_list_path : '/v1/kr/bank/b/account/list'
+  account_list_path : '/v1/kr/bank/b/account/account-list'
 }
 
 var oauth = {
