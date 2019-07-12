@@ -22,17 +22,35 @@ CODEF API는 원활한 개발을 위해 샌드박스, 개발, 운영 환경을 �
 CODEF API를 사용하기 위해서는 'access_token' 발행이 선행되어야 하며, 거래 시 Header 에 포함하여 요청합니다.
 'access_token'을 발급 받기 위한 'client_id' 및 'client_secret'은 https://codef.io/#/account/keys 에서 확인할 수 있습니다.
 
-```python
-token_url = 'https://api.codef.io/oauth/token'
-response_oauth = request_token(token_url, "codef_master", "codef_master_secret");
-    if response_oauth.status_code == 200:
-        dict = json.loads(response_oauth.text)
-        # reissue_token
-        token = dict['access_token']
+```javascript
+var tokenUrl = 'https://api.codef.io/oauth/token'
+requestToken(tokenUrl, 'codef_master', 'codef_master_secret', authTokenCallback);
+var authTokenCallback = function(response){
+  console.log('authTokenCallback Status: ' + response.statusCode);
+  console.log('authTokenCallback Headers: ' + JSON.stringify(response.headers));
 
-        print('access_token = ' + token)
-    else:
-        print('토큰발급 오류')
+  var body = '';
+  response.setEncoding('utf8');
+  response.on('data', function(data) {
+    body += data;
+  });
+
+  // end 이벤트가 감지되면 데이터 수신을 종료하고 내용을 출력한다
+  response.on('end', function() {
+    // 데이저 수신 완료
+    console.log('authTokenCallback body = ' + body);
+    token = JSON.parse(body).access_token;
+    if(response.statusCode == 200) {
+      console.log('토큰발급 성공')
+      console.log('token = ' + token);
+
+      // CODEF API 요청
+      httpSender(codefAccountCreateUrl, token, codefAccountCreateBody, codefAccountCreateCallback);
+    } else {
+      console.log('토큰발급 오류')
+    }
+  });
+}
 ```
 ```json
 {"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX3R5cGUiOiIwIiwic2NvcGUiOlsicmVhZCJdLCJzZXJ2aWNlX25vIjoiMDAwMDAwMDQyMDAxIiwiZXhwIjoxNTYyNjc0NTczLCJhdXRob3JpdGllcyI6WyJJTlNVUkFOQ0UiLCJQVUJMSUMiLCJCQU5LIiwiRVRDIiwiU1RPQ0siLCJDQVJEIl0sImp0aSI6ImFiNTBjM2RmLWQ3MzctNGE2Ny04Zjg4LWQzOTE2YTNiYmNiMSIsImNsaWVudF9pZCI6ImNvZGVmX21hc3RlciJ9.EXBV-D89_zoYmFdiULahGqcp1T2Du8DM51Trf1fD4MxsKYsA1t37ovffIKIQvqLHwQz4W8EqC6s8lM1V_IqFG5D5yafmyvprVi7ciqRMBBIsnEZN8xk1gBqLydtwkG0jKTrCLTBls8zATHbWV8BO6oUw8fwQId4ExeewbqeflSBCLOztb4c8UkR1WFDqQs63Ezry8k79VN5HPSktChJGnGq0xWmtbMlwv8IubvveJkMLz-6Iw6hlSMjeat_fv-gZCPTPdoaMa-BPxcAhI772cSCrfJNzori0uVFIeBEInabDzAKpXjvbsZEz_q70QGGSPkoslxFb_N-MYSNPgCWEvw","token_type":"bearer","expires_in":9,"scope":"read"}
@@ -44,7 +62,7 @@ response_oauth = request_token(token_url, "codef_master", "codef_master_secret")
 CODEF API를 사용하기 위해서는 엔드유저가 사용하는 대상기관의 인증수단 등록이 필요하며, 이를 통해 사용자마다 유니크한 'connected_id'를 발급받을 수 있습니다.
 이후에는 별도의 인증수단 전송 없이 'connected_id'를 통해서 대상기관의 데이터를 연동할 수 있습니다.
 
-```python
+```javascript
 codef_account_create_url = 'https://api.codef.io/account/create'
 codef_account_create_body = {
             'accountList':[                    # 계정목록
@@ -73,7 +91,7 @@ connected_id = dict['data']['connectedId']
 계정 생성을 통해 발급받은 'connected_id'에 추가 기관의 인증수단을 등록할 수 있습니다. 추가 등록한 기관을 포함하여 이후에는 별도의 인증수단 전송없이
 'connected_id'를 통해서 대상기관의 데이터를 연동할 수 있습니다.
 
-```python
+```javascript
 codef_account_add_url = 'https://api.codef.io/account/add'
 codef_account_add_body = {
             'connectedId': '계정생성 시 발급받은 아이디',    # connected_id
@@ -101,7 +119,7 @@ response_account_add = http_sender(codef_account_add_url, token, codef_account_a
 계정 생성을 통해 발급받은 'connected_id'에 등록된 기관의 인증수단을 변경할 수 있습니다. 변경 요청한 기관의 인증 수단은 호출 즉시 변경되며, 이 후
 'connected_id'를 통해서 대상기관의 데이터를 연동할 수 있습니다.
 
-```python
+```javascript
 codef_account_update_url = 'https://api.codef.io/account/update'
 codef_account_update_body = {
             'connectedId': '계정생성 시 발급받은 아이디',    # connected_id
@@ -129,7 +147,7 @@ response_account_update = http_sender(codef_account_update_url, token, codef_acc
 엔드유저가 등록된 계정의 삭제를 요청 시 'connected_id'에 등록된 기관의 인증수단을 즉시 삭제할 수 있습니다. 요청한 기관의 인증 수단은 호출 즉시 삭제되며,
 해당 데이터는 복구할 수 없습니다.
 
-```python
+```javascript
 codef_account_delete_url = 'https://api.codef.io/account/delete'
 codef_account_delete_body = {
             'connectedId': '계정생성 시 발급받은 아이디',    # connected_id
@@ -157,7 +175,7 @@ response_account_delete = http_sender(codef_account_delete_url, token, codef_acc
 발급받은 'connected_id' 를 통해 등록된 기관의 보유계좌를 조회할 수 있습니다.
 
 TestKR_BK_1_B_001.py
-```python
+```javascript
 # CodefURL
 codef_url = 'https://api.codef.io'
 token_url = 'https://api.codef.io/oauth/token'
