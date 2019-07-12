@@ -1,30 +1,57 @@
 var http = require('http');
+var parse = require('url-parse')
 var urlencode = require('urlencode');
 
-// CODEF
-var codef = {
-  host : '192.168.10.126',
-  port : '10001',
-  // 은행 법인 보유계좌 Task
-  account_list_path : '/v1/kr/bank/b/account/account-list'
-}
+// ========== HTTP 기본 함수 ==========
+var httpSender = function(url, token, body, callback) {
+  var uri = parse(url, true);
 
-// OAuth
-var oauth = {
-  token_url : '192.168.10.126',
-  token_port : '8888',
-  token_path : '/oauth/token',
-  // 기 발급된 토큰
-  access_token : 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX3R5cGUiOiIwIiwic2NvcGUiOlsicmVhZCJdLCJzZXJ2aWNlX25vIjoiOTk5OTk5OTk5OSIsImV4cCI6MTU2MjczNjUyNywiYXV0aG9yaXRpZXMiOlsiSU5TVVJBTkNFIiwiUFVCTElDIiwiQkFOSyIsIkVUQyIsIlNUT0NLIiwiQ0FSRCJdLCJqdGkiOiIyODBhNjVkOS02NjU1LTQ5MzYtODEwNS05MjUyYTk4MGRjMDgiLCJjbGllbnRfaWQiOiJjb2RlZl9tYXN0ZXIifQ.eFCEgxcntsEkjFORAWGSi6949UMOuCxVsm2wnYlDXqrHWXXwG7-XfKugsBNone_qRRGeKD3iv6f_TEcVMWyTz8aS0fRbE514LVz6PnzKbruyPNDA5Pk3ym8up9h4Ba1ix__Bvpu_TB0Y7Fikk9YHWHacJy4F_WOjr8xFP-q2egh763_LqVUzRakGQoLOTukduZ5zH5lfSO1Z9yx2cnDkY4VSM9DTbycSZuA2oQkMVpXJc0slEyWLw7WNX5E-ff3fL6ePfJvu7by_4KmgmmJkOoKBWvJ00DwrwhAa1EZmjqGPYG6RE6wxSwsu3lYeiCX-jSGm_cbKdk7YDnYxm8FKzg'
+  var request = http.request({
+    hostname: uri.hostname,
+    path: uri.pathname,
+    port : uri.port,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    }
+  }, callback);
+  request.write(JSON.stringify(body));
+  request.end();
 }
+// ========== HTTP 함수  ==========
+
+// ========== Toekn 재발급  ==========
+var requestToken = function(url, clientID, clientSecret, callback) {
+  var uri = parse(url)
+
+  var authHeader = new Buffer(clientID + ':' + clientSecret).toString('base64');
+
+  var request = http.request({
+    hostname: uri.hostname,
+    path: uri.pathname,
+    port : uri.port,
+    method: 'POST',
+    headers: {
+      'Acceppt': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + authHeader
+    }
+  }, callback);
+  request.write('grant_type=client_credentials&scope=read');
+  request.end();
+}
+// ========== Toekn 재발급  ==========
 
 
 // token URL
-token_url = 'http://192.168.10.126:8888/oauth/token'
+var tokenUrl = 'http://192.168.10.126:8888/oauth/token'
 
 // CODEF 연결 아이디
-connected_id = ''
+var connectedId = ''
 
+// 기 발급된 토큰
+var token ='eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX3R5cGUiOiIwIiwic2NvcGUiOlsicmVhZCJdLCJzZXJ2aWNlX25vIjoiMDAwMDAwMDQyMDAxIiwiZXhwIjoxNTYzMjUyNzA3LCJhdXRob3JpdGllcyI6WyJJTlNVUkFOQ0UiLCJQVUJMSUMiLCJCQU5LIiwiRVRDIiwiU1RPQ0siLCJDQVJEIl0sImp0aSI6IjRmYmZkMjE4LTVmZjAtNDVkMy1iOGMyLTk5NGQ0ZDBhYjQ1OCIsImNsaWVudF9pZCI6ImNvZGVmX21hc3RlciJ9.J1NftjvJ7Hrv6u8Qz0mI4TDfKy9Ozt4ptN5bz9ZLss-JTRsR289yikYBdtliDFSb2onE9rkIrxx-ljQYdbrXJ-U82i2v7cGqff-Ue7EjVyBYEX3JRENB54etuQMXE7qm4p7G01J61IIbemElWmSAD7Q8RQ7-0lEYZn9ZWVbdw4C4vgjXSN_nxOiiY0v6yKkP6GHyFnvzXNIcyH7U_fuRbuIJvzpvotw7icre7v6yplSye1skCVvHd5mBCKB2ypyOOKmrYMLCxZpJe3MPiV1aPhWyctsB6aQyJE8NV1JPfNLhIdjB8ApyITWuX4HYuYRzf_3ED4mEmpmlKupCG_A9Gw'
 
 //////////////////////////////////////////////////////////////////////////////
 //                               계정 생성 Sample                             //
@@ -39,8 +66,8 @@ connected_id = ''
 //   keyFile : 인증서 keyFile
 //
 //////////////////////////////////////////////////////////////////////////////
-codef_account_create_url = 'http://192.168.10.126:10001/v1/account/create'
-codef_account_create_body = {
+var codefAccountCreateUrl = 'http://192.168.10.126:10001/v1/account/create';
+var codefAccountCreateBody = {
             'accountList':[
                 {
                     'organization':'0003',
@@ -52,53 +79,62 @@ codef_account_create_body = {
             ]
 }
 
+// Auth Token Callback
+var authTokenCallback = function(response){
+  console.log('authTokenCallback Status: ' + response.statusCode);
+  console.log('authTokenCallback Headers: ' + JSON.stringify(response.headers));
+
+  var body = '';
+  response.setEncoding('utf8');
+  response.on('data', function(data) {
+    body += data;
+  });
+
+  // end 이벤트가 감지되면 데이터 수신을 종료하고 내용을 출력한다
+  response.on('end', function() {
+    // 데이저 수신 완료
+    console.log('authTokenCallback body = ' + body);
+    token = JSON.parse(body).access_token;
+    if(response.statusCode == 200) {
+      console.log('토큰발급 성공')
+      console.log('token = ' + token);
+
+      // CODEF API 요청
+      httpSender(codefAccountCreateUrl, token, codefAccountCreateBody, codefAccountCreateCallback);
+    } else {
+      console.log('토큰발급 오류')
+    }
+  });
+}
+
+// CODEF API Callback
+var codefAccountCreateCallback = function(response){
+  console.log('codefAccountCreateCallback Status: ' + response.statusCode);
+  console.log('codefAccountCreateCallback Headers: ' + JSON.stringify(response.headers));
+
+  var body = '';
+  response.setEncoding('utf8');
+  response.on('data', function(data) {
+    body += data;
+  });
+
+  // end 이벤트가 감지되면 데이터 수신을 종료하고 내용을 출력한다
+  response.on('end', function() {
+    console.log('codefAccountCreateCallback body:' + urlencode.decode(body));
+
+    // 데이저 수신 완료
+    if(response.statusCode == 401) {
+      // reissue token
+      requestToken(tokenUrl, 'codef_master', 'codef_master_secret', authTokenCallback);
+    } else {
+      var dict = JSON.parse(urlencode.decode(body))
+
+      connectedId = dict.data.connectedId;
+      console.log('connectedId = ' + connectedId);
+      console.log('계정생성 정상처리');
+    }
+  });
+}
+
 // CODEF API 요청
-var req = http.request({
-  hostname: codef.host,
-  path: codef.account_list_path,
-  port : codef.port,
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + oauth.access_token
-  }
-}, codefApiCallback);
-req.write(
-  // setBodyData
-  '{"connected_id":"9LUm.uhVQbzaangazwI0tr","organization":"0011"}'
-);
-req.end();
-
-response_account_create = http_sender(codef_account_create_url, token, codef_account_create_body)
-if response_account_create.status_code == 401:      # token error
-    dict = json.loads(response_account_create.text)
-    # invalid_token
-    print('error = ' + dict['error'])
-    # Cannot convert access token to JSON
-    print('error_description = ' + dict['error_description'])
-
-    # reissue token
-    response_oauth = request_token(token_url, "codef_master", "codef_master_secret");
-    if response_oauth.status_code == 200:
-        dict = json.loads(response_oauth.text)
-        # reissue_token
-        token = dict['access_token']
-        print('access_token = ' + token)
-
-        # request codef_api
-        response = http_sender(codef_account_create_url, token, codef_account_create_body)
-        dict = json.loads(urllib.unquote_plus(response.text.encode('utf8')))
-        connected_id = dict['data']['connectedId']
-        print('connected_id = ' + connected_id)
-        print('계정생성 정상처리')
-
-        # codef_api 응답 결과
-        print(response.status_code)
-        print(response.text)
-    else:
-        print('토큰발급 오류')
-else:
-    dict = json.loads(urllib.unquote_plus(response_account_create.text.encode('utf8')))
-    connected_id = dict['data']['connectedId']
-    print('connected_id = ' + connected_id)
-    print('계정생성 정상처리')
+httpSender(codefAccountCreateUrl, token, codefAccountCreateBody, codefAccountCreateCallback);
