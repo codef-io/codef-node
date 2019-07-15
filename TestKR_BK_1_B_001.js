@@ -1,11 +1,10 @@
-var http = require('http');
 var https = require('https');
 var parse = require('url-parse')
 var urlencode = require('urlencode');
 
 // ========== HTTP 기본 함수 ==========
-var http_sender = function(url, token, body) {
-  console.log('========== http_sender ========== ')
+var httpSender = function(url, token, body) {
+  console.log('========== httpSender ========== ')
   var uri = parse(url, true);
 
   var request = https.request({
@@ -24,8 +23,8 @@ var http_sender = function(url, token, body) {
 // ========== HTTP 함수  ==========
 
 // ========== Toekn 재발급  ==========
-var request_token = function(url, client_id, client_secret) {
-  console.log('========== request_token ========== ')
+var requestToken = function(url, client_id, client_secret) {
+  console.log('========== requestToken ========== ')
   var uri = parse(url)
 
   var authHeader = new Buffer(client_id + ':' + client_secret).toString('base64');
@@ -46,10 +45,6 @@ var request_token = function(url, client_id, client_secret) {
 }
 // ========== Toekn 재발급  ==========
 
-
-// CodefURL
-// var codef_url = 'https://tapi.codef.io'
-// var token_url = 'https://toauth.codef.io/oauth/token'
 
 var codef_url = 'https://tapi.codef.io'
 var token_url = 'https://toauth.codef.io/oauth/token'
@@ -87,7 +82,7 @@ var authTokenCallback = function(response){
       console.log('token = ' + token);
 
       // CODEF API 요청
-      http_sender(codef_url + account_list_path, token, codef_api_body);
+      httpSender(codef_url + account_list_path, token, codef_api_body);
     } else {
       console.log('토큰발급 오류')
     }
@@ -113,7 +108,7 @@ var codefApiCallback = function(response){
     if(response.statusCode == 200) {
       console.log('정상처리');
     } else if(response.statusCode == 401) {
-      request_token(token_url, 'codef_master', 'codef_master_secret');
+      requestToken(token_url, 'codef_master', 'codef_master_secret');
     } else {
       console.log('API 요청 오류');
     }
@@ -121,4 +116,4 @@ var codefApiCallback = function(response){
 }
 
 // CODEF API 요청
-http_sender(codef_url + account_list_path, token, codef_api_body);
+httpSender(codef_url + account_list_path, token, codef_api_body);
