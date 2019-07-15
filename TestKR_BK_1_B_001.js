@@ -1,12 +1,14 @@
 var http = require('http');
+var https = require('https');
 var parse = require('url-parse')
 var urlencode = require('urlencode');
 
 // ========== HTTP 기본 함수 ==========
 var http_sender = function(url, token, body) {
+  console.log('========== http_sender ========== ')
   var uri = parse(url, true);
 
-  var request = http.request({
+  var request = https.request({
     hostname: uri.hostname,
     path: uri.pathname,
     port : uri.port,
@@ -23,11 +25,12 @@ var http_sender = function(url, token, body) {
 
 // ========== Toekn 재발급  ==========
 var request_token = function(url, client_id, client_secret) {
+  console.log('========== request_token ========== ')
   var uri = parse(url)
 
   var authHeader = new Buffer(client_id + ':' + client_secret).toString('base64');
 
-  var request = http.request({
+  var request = https.request({
     hostname: uri.hostname,
     path: uri.pathname,
     port : uri.port,
@@ -45,8 +48,11 @@ var request_token = function(url, client_id, client_secret) {
 
 
 // CodefURL
-var codef_url = 'http://192.168.10.126:10001'
-var token_url = 'http://192.168.10.126:8888/oauth/token'
+// var codef_url = 'https://tapi.codef.io'
+// var token_url = 'https://toauth.codef.io/oauth/token'
+
+var codef_url = 'https://tapi.codef.io'
+var token_url = 'https://toauth.codef.io/oauth/token'
 
 // 은행 법인 보유계좌
 var account_list_path = '/v1/kr/bank/b/account/account-list'
@@ -104,10 +110,12 @@ var codefApiCallback = function(response){
     console.log('codefApiCallback body:' + urlencode.decode(body));
 
     // 데이저 수신 완료
-    if(response.statusCode == 401) {
+    if(response.statusCode == 200) {
+      console.log('정상처리');
+    } else if(response.statusCode == 401) {
       request_token(token_url, 'codef_master', 'codef_master_secret');
     } else {
-      console.log('정상처리');
+      console.log('API 요청 오류');
     }
   });
 }
