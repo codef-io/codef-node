@@ -25,32 +25,27 @@ CODEF API를 사용하기 위해서는 'access_token' 발행이 선행되어야 
 ```javascript
 var tokenUrl = 'https://api.codef.io/oauth/token'
 requestToken(tokenUrl, 'codef_master', 'codef_master_secret', authTokenCallback);
-var authTokenCallback = function(response){
-  console.log('authTokenCallback Status: ' + response.statusCode);
-  console.log('authTokenCallback Headers: ' + JSON.stringify(response.headers));
 
-  var body = '';
-  response.setEncoding('utf8');
-  response.on('data', function(data) {
-    body += data;
-  });
+var requestToken = function(url, client_id, client_secret, callback) {
+  var uri = parse(url)
 
-  // end 이벤트가 감지되면 데이터 수신을 종료하고 내용을 출력한다
-  response.on('end', function() {
-    // 데이저 수신 완료
-    console.log('authTokenCallback body = ' + body);
-    token = JSON.parse(body).access_token;
-    if(response.statusCode == 200) {
-      console.log('토큰발급 성공')
-      console.log('token = ' + token);
+  var authHeader = new Buffer(client_id + ':' + client_secret).toString('base64');
 
-      // CODEF API 요청
-      httpSender(codefAccountCreateUrl, token, codefAccountCreateBody, codefAccountCreateCallback);
-    } else {
-      console.log('토큰발급 오류')
+  var request = https.request({
+    hostname: uri.hostname,
+    path: uri.pathname,
+    port : uri.port,
+    method: 'POST',
+    headers: {
+      'Acceppt': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + authHeader
     }
-  });
+  }, callback);
+  request.write('grant_type=client_credentials&scope=read');
+  request.end();
 }
+
 ```
 ```json
 {"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX3R5cGUiOiIwIiwic2NvcGUiOlsicmVhZCJdLCJzZXJ2aWNlX25vIjoiMDAwMDAwMDQyMDAxIiwiZXhwIjoxNTYyNjc0NTczLCJhdXRob3JpdGllcyI6WyJJTlNVUkFOQ0UiLCJQVUJMSUMiLCJCQU5LIiwiRVRDIiwiU1RPQ0siLCJDQVJEIl0sImp0aSI6ImFiNTBjM2RmLWQ3MzctNGE2Ny04Zjg4LWQzOTE2YTNiYmNiMSIsImNsaWVudF9pZCI6ImNvZGVmX21hc3RlciJ9.EXBV-D89_zoYmFdiULahGqcp1T2Du8DM51Trf1fD4MxsKYsA1t37ovffIKIQvqLHwQz4W8EqC6s8lM1V_IqFG5D5yafmyvprVi7ciqRMBBIsnEZN8xk1gBqLydtwkG0jKTrCLTBls8zATHbWV8BO6oUw8fwQId4ExeewbqeflSBCLOztb4c8UkR1WFDqQs63Ezry8k79VN5HPSktChJGnGq0xWmtbMlwv8IubvveJkMLz-6Iw6hlSMjeat_fv-gZCPTPdoaMa-BPxcAhI772cSCrfJNzori0uVFIeBEInabDzAKpXjvbsZEz_q70QGGSPkoslxFb_N-MYSNPgCWEvw","token_type":"bearer","expires_in":9,"scope":"read"}
@@ -63,7 +58,7 @@ CODEF API를 사용하기 위해서는 엔드유저가 사용하는 대상기관
 이후에는 별도의 인증수단 전송 없이 'connected_id'를 통해서 대상기관의 데이터를 연동할 수 있습니다.
 
 ```javascript
-codef_account_create_url = 'https://api.codef.io/account/create'
+codef_account_create_url = 'https://api.codef.io/v1/account/create'
 codef_account_create_body = {
             'accountList':[                    # 계정목록
                 {
@@ -77,9 +72,20 @@ codef_account_create_body = {
 }
 
 # CODEF API 호출
-response_account_create = http_sender(codef_account_create_url, token, codef_account_create_body)
-dict = json.loads(urllib.unquote_plus(response.text.encode('utf8')))
-connected_id = dict['data']['connectedId']
+httpSender(codef_account_create_url, token, codef_account_create_body, callback)
+response.on('end', function() {
+  // 데이저 수신 완료
+  if(response.statusCode == 401) {
+    // reissue token
+    requestToken(tokenUrl, 'codef_master', 'codef_master_secret', authTokenCallback);
+  } else {
+    var dict = JSON.parse(urlencode.decode(body))
+
+    connectedId = dict.data.connectedId;
+    console.log('connectedId = ' + connectedId);
+    console.log('계정생성 정상처리');
+  }
+});
 ```
 ```json
 {"result":{"code":"CF-00000","extraMessage":"","message":"정상"},"data":{"organizationList":[{"loginType":"0","organization":"0003"}],"connectedId":"1rZjLWFDQTAbWI-9weTq03"}}
@@ -92,9 +98,8 @@ connected_id = dict['data']['connectedId']
 'connected_id'를 통해서 대상기관의 데이터를 연동할 수 있습니다.
 
 ```javascript
-codef_account_add_url = 'https://api.codef.io/account/add'
-codef_account_add_body = {
-            'connectedId': '계정생성 시 발급받은 아이디',    # connected_id
+codef_account_create_url = 'https://api.codef.io/v1/account/add'
+codef_account_create_body = {
             'accountList':[                    # 계정목록
                 {
                     'organization':'0003',     # 기관코드
@@ -107,7 +112,20 @@ codef_account_add_body = {
 }
 
 # CODEF API 호출
-response_account_add = http_sender(codef_account_add_url, token, codef_account_add_body)
+httpSender(codef_account_add_url, token, codef_account_add_body, callback)
+response.on('end', function() {
+  // 데이저 수신 완료
+  if(response.statusCode == 401) {
+    // reissue token
+    requestToken(tokenUrl, 'codef_master', 'codef_master_secret', authTokenCallback);
+  } else {
+    var dict = JSON.parse(urlencode.decode(body))
+
+    connectedId = dict.data.connectedId;
+    console.log('connectedId = ' + connectedId);
+    console.log('계정추가 정상처리');
+  }
+});
 ```
 ```json
 {"result":{"code":"CF-94004","extraMessage":"","message":"이미 계정이 등록된 기관입니다. 기존 계정 먼저 삭제하세요."},"data":{"organizationList":[{"loginType":"0","organization":"0003"}],"connectedId":"1rZjLWFDQTAbWI-9weTq03"}}
@@ -120,7 +138,7 @@ response_account_add = http_sender(codef_account_add_url, token, codef_account_a
 'connected_id'를 통해서 대상기관의 데이터를 연동할 수 있습니다.
 
 ```javascript
-codef_account_update_url = 'https://api.codef.io/account/update'
+codef_account_update_url = 'https://api.codef.io/v1/account/update'
 codef_account_update_body = {
             'connectedId': '계정생성 시 발급받은 아이디',    # connected_id
             'accountList':[                    # 계정목록
@@ -135,7 +153,20 @@ codef_account_update_body = {
 }
 
 # CODEF API 호출
-response_account_update = http_sender(codef_account_update_url, token, codef_account_update_body)
+httpSender(codef_account_update_url, token, codef_account_update_body,callback)
+response.on('end', function() {
+  // 데이저 수신 완료
+  if(response.statusCode == 401) {
+    // reissue token
+    requestToken(tokenUrl, 'codef_master', 'codef_master_secret', authTokenCallback);
+  } else {
+    var dict = JSON.parse(urlencode.decode(body))
+
+    connectedId = dict.data.connectedId;
+    console.log('connectedId = ' + connectedId);
+    console.log('계정수정 정상처리');
+  }
+});
 ```
 ```json
 {"result":{"code":"CF-00000","extraMessage":"","message":"정상"},"data":{"organizationList":[{"loginType":"0","organization":"0003"}],"connectedId":"8-cXc.6lk-ib4Whi5zClVt"}}
@@ -148,7 +179,7 @@ response_account_update = http_sender(codef_account_update_url, token, codef_acc
 해당 데이터는 복구할 수 없습니다.
 
 ```javascript
-codef_account_delete_url = 'https://api.codef.io/account/delete'
+codef_account_delete_url = 'https://api.codef.io/v1/account/delete'
 codef_account_delete_body = {
             'connectedId': '계정생성 시 발급받은 아이디',    # connected_id
             'accountList':[                    # 계정목록
@@ -163,7 +194,20 @@ codef_account_delete_body = {
 }
 
 # CODEF API 호출
-response_account_delete = http_sender(codef_account_delete_url, token, codef_account_delete_body)
+httpSender(codef_account_delete_url, token, codef_account_delete_body, callback)
+response.on('end', function() {
+  // 데이저 수신 완료
+  if(response.statusCode == 401) {
+    // reissue token
+    requestToken(tokenUrl, 'codef_master', 'codef_master_secret', authTokenCallback);
+  } else {
+    var dict = JSON.parse(urlencode.decode(body))
+
+    connectedId = dict.data.connectedId;
+    console.log('connectedId = ' + connectedId);
+    console.log('계정삭제 정상처리');
+  }
+});
 ```
 ```json
 {"result":{"code":"CF-00000","extraMessage":"","message":"정상"},"data":{"organizationList":[{"loginType":"0","organization":"0003"}],"connectedId":"8-cXc.6lk-ib4Whi5zClVt"}}

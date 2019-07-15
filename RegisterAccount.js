@@ -57,7 +57,7 @@ var token ='eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX3R5cGUiOiIwIiwic2N
 //                               계정 생성 Sample                             //
 //////////////////////////////////////////////////////////////////////////////
 // Input Param
-//
+// connectedId : 연결 ID
 // accountList : 계정목록
 //   organization : 기관코드
 //   loginType : 로그인타입 (0: 인증서, 1: ID/PW)
@@ -68,6 +68,7 @@ var token ='eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX3R5cGUiOiIwIiwic2N
 //////////////////////////////////////////////////////////////////////////////
 var codefAccountCreateUrl = 'https://tapi.codef.io/v1/account/create';
 var codefAccountCreateBody = {
+            'connectedId': '8-cXc.6lk-ib4Whi5zClVt',    # connected_id
             'accountList':[
                 {
                     'organization':'0003',
