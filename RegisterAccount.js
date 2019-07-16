@@ -57,8 +57,11 @@ var token ='eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX3R5cGUiOiIwIiwic2N
 //                               계정 생성 Sample                             //
 //////////////////////////////////////////////////////////////////////////////
 // Input Param
-// connectedId : 연결 ID
+//
 // accountList : 계정목록
+//   countryCode : 국가코드
+//   businessType : 비즈니스 구분
+//   clientType : 고객구분(P: 개인, B: 기업)
 //   organization : 기관코드
 //   loginType : 로그인타입 (0: 인증서, 1: ID/PW)
 //   password : 인증서 비밀번호
@@ -68,14 +71,16 @@ var token ='eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX3R5cGUiOiIwIiwic2N
 //////////////////////////////////////////////////////////////////////////////
 var codefAccountCreateUrl = 'https://tapi.codef.io/v1/account/create';
 var codefAccountCreateBody = {
-            'connectedId': '8-cXc.6lk-ib4Whi5zClVt',    # connected_id
             'accountList':[
                 {
-                    'organization':'0003',
-                    'loginType':'0',
-                    'password':'',        // 인증서 비밀번호 입력
-                    'derFile':'MIIF...=', // 인증서 DerFile Base64
-                    'keyFile':'MIIF...='  // 인증서 KeyFile Base64
+                  'countryCode':'KR',
+                  'businessType':'BK',
+                  'clientType':'P',
+                  'organization':'0004',
+                  'loginType':'0',
+                  'password':'1234',      // 인증서 비밀번호 입력
+                  'derFile':'MIIF...',    // 인증서 인증서 DerFile
+                  'keyFile':'MIIF...'     // 인증서 인증서 KeyFile
                 }
             ]
 }
@@ -149,6 +154,9 @@ httpSender(codefAccountCreateUrl, token, codefAccountCreateBody, codefAccountCre
 //
 // connectedId : CODEF 연결아이디
 // accountList : 계정목록
+//   countryCode : 국가코드
+//   businessType : 비즈니스 구분
+//   clientType : 고객구분(P: 개인, B: 기업)
 //   organization : 기관코드
 //   loginType : 로그인타입 (0: 인증서, 1: ID/PW)
 //   password : 인증서 비밀번호
@@ -161,11 +169,14 @@ var codefAccountAddBody = {
             'connectedId': '8-cXc.6lk-ib4Whi5zClVt',    // connected_id
             'accountList':[
                 {
-                    'organization':'0003',
-                    'loginType':'0',
-                    'password':'',        // 인증서 비밀번호 입력
-                    'derFile':'MIIF...=', // 인증서 DerFile Base64
-                    'keyFile':'MIIF...='  // 인증서 KeyFile Base64
+                  'countryCode':'KR',
+                  'businessType':'BK',
+                  'clientType':'P',
+                  'organization':'0020',
+                  'loginType':'0',
+                  'password':'1234',      // 인증서 비밀번호 입력
+                  'derFile':'MIIF...',    // 인증서 인증서 DerFile
+                  'keyFile':'MIIF...'     // 인증서 인증서 KeyFile
                 }
             ]
 }
@@ -219,9 +230,6 @@ var codefAccountAddCallback = function(response){
       requestToken(tokenUrl, 'codef_master', 'codef_master_secret', authTokenCallback);
     } else {
       var dict = JSON.parse(urlencode.decode(body))
-
-      connectedId = dict.data.connectedId;
-      console.log('connectedId = ' + connectedId);
       console.log('계정생성 정상처리');
     }
   });
@@ -232,30 +240,36 @@ httpSender(codefAccountAddUrl, token, codefAccountAddBody, codefAccountAddCallba
 
 
 
-// //////////////////////////////////////////////////////////////////////////////
-// //                               계정 수정 Sample                             //
-// //////////////////////////////////////////////////////////////////////////////
-// // Input Param
-// //
-// // connectedId : CODEF 연결아이디
-// // accountList : 계정목록
-// //   organization : 기관코드
-// //   loginType : 로그인타입 (0: 인증서, 1: ID/PW)
-// //   password : 인증서 비밀번호
-// //   derFile : 인증서 derFile
-// //   keyFile : 인증서 keyFile
-// //
-// //////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//                               계정 수정 Sample                             //
+//////////////////////////////////////////////////////////////////////////////
+// Input Param
+//
+// connectedId : CODEF 연결아이디
+// accountList : 계정목록
+//   countryCode : 국가코드
+//   businessType : 비즈니스 구분
+//   clientType : 고객구분(P: 개인, B: 기업)
+//   organization : 기관코드
+//   loginType : 로그인타입 (0: 인증서, 1: ID/PW)
+//   password : 인증서 비밀번호
+//   derFile : 인증서 derFile
+//   keyFile : 인증서 keyFile
+//
+//////////////////////////////////////////////////////////////////////////////
 var codefAccountUpdateUrl = 'https://tapi.codef.io/v1/account/add'
 var codefAccountUpdateBody = {
             'connectedId': '8-cXc.6lk-ib4Whi5zClVt',    // connected_id
             'accountList':[
                 {
-                    'organization':'0003',
-                    'loginType':'0',
-                    'password':'',        // 인증서 비밀번호 입력
-                    'derFile':'MIIF...=', // 인증서 DerFile Base64
-                    'keyFile':'MIIF...='  // 인증서 KeyFile Base64
+                  'countryCode':'KR',
+                  'businessType':'BK',
+                  'clientType':'P',
+                  'organization':'0020',
+                  'loginType':'0',
+                  'password':'1234',      // 인증서 비밀번호 입력
+                  'derFile':'MIIF...',    // 인증서 인증서 DerFile
+                  'keyFile':'MIIF...'     // 인증서 인증서 KeyFile
                 }
             ]
 }
@@ -329,6 +343,9 @@ httpSender(codefAccountUpdateUrl, token, codefAccountUpdateBody, codefAccountUpd
 //
 // connectedId : CODEF 연결아이디
 // accountList : 계정목록
+//   countryCode : 국가코드
+//   businessType : 비즈니스 구분
+//   clientType : 고객구분(P: 개인, B: 기업)
 //   organization : 기관코드
 //   loginType : 로그인타입 (0: 인증서, 1: ID/PW)
 //   password : 인증서 비밀번호
@@ -341,11 +358,14 @@ var codefAccountDeleteBody = {
             'connectedId': '8-cXc.6lk-ib4Whi5zClVt',    // connected_id
             'accountList':[
                 {
-                    'organization':'0003',
-                    'loginType':'0',
-                    'password':'',        // 인증서 비밀번호 입력
-                    'derFile':'MIIF...=', // 인증서 DerFile Base64
-                    'keyFile':'MIIF...='  // 인증서 KeyFile Base64
+                  'countryCode':'KR',
+                  'businessType':'BK',
+                  'clientType':'P',
+                  'organization':'0020',
+                  'loginType':'0',
+                  'password':'1234',      // 인증서 비밀번호 입력
+                  'derFile':'MIIF...',    // 인증서 인증서 DerFile
+                  'keyFile':'MIIF...'     // 인증서 인증서 KeyFile
                 }
             ]
 }
