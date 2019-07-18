@@ -108,7 +108,7 @@ var codefApiCallback = function(response){
     if(response.statusCode == 200) {
       console.log('정상처리');
     } else if(response.statusCode == 401) {
-      requestToken(token_url, 'codef_master', 'codef_master_secret');
+      requestToken(token_url, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키');
     } else {
       console.log('API 요청 오류');
     }

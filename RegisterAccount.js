@@ -131,7 +131,7 @@ var codefAccountCreateCallback = function(response){
     // 데이저 수신 완료
     if(response.statusCode == 401) {
       // reissue token
-      requestToken(tokenUrl, 'codef_master', 'codef_master_secret', authTokenCallback);
+      requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
     } else {
       var dict = JSON.parse(urlencode.decode(body))
 
@@ -227,7 +227,7 @@ var codefAccountAddCallback = function(response){
     // 데이저 수신 완료
     if(response.statusCode == 401) {
       // reissue token
-      requestToken(tokenUrl, 'codef_master', 'codef_master_secret', authTokenCallback);
+      requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
     } else {
       var dict = JSON.parse(urlencode.decode(body))
       console.log('계정생성 정상처리');
@@ -320,7 +320,7 @@ var codefAccountUpdateCallback = function(response){
     // 데이저 수신 완료
     if(response.statusCode == 401) {
       // reissue token
-      requestToken(tokenUrl, 'codef_master', 'codef_master_secret', authTokenCallback);
+      requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
     } else {
       var dict = JSON.parse(urlencode.decode(body))
 
@@ -416,7 +416,7 @@ var codefAccountDeleteCallback = function(response){
     // 데이저 수신 완료
     if(response.statusCode == 401) {
       // reissue token
-      requestToken(tokenUrl, 'codef_master', 'codef_master_secret', authTokenCallback);
+      requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
     } else {
       var dict = JSON.parse(urlencode.decode(body))
 

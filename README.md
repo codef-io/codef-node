@@ -24,7 +24,7 @@ CODEF API를 사용하기 위해서는 'access_token' 발행이 선행되어야 
 
 ```javascript
 var tokenUrl = 'https://api.codef.io/oauth/token'
-requestToken(tokenUrl, 'codef_master', 'codef_master_secret', authTokenCallback);
+requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
 
 var requestToken = function(url, client_id, client_secret, callback) {
   var uri = parse(url)
@@ -80,7 +80,7 @@ response.on('end', function() {
   // 데이저 수신 완료
   if(response.statusCode == 401) {
     // reissue token
-    requestToken(tokenUrl, 'codef_master', 'codef_master_secret', authTokenCallback);
+    requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
   } else {
     var dict = JSON.parse(urlencode.decode(body))
 
@@ -123,7 +123,7 @@ response.on('end', function() {
   // 데이저 수신 완료
   if(response.statusCode == 401) {
     // reissue token
-    requestToken(tokenUrl, 'codef_master', 'codef_master_secret', authTokenCallback);
+    requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
   } else {
     var dict = JSON.parse(urlencode.decode(body))
 
@@ -166,7 +166,7 @@ response.on('end', function() {
   // 데이저 수신 완료
   if(response.statusCode == 401) {
     // reissue token
-    requestToken(tokenUrl, 'codef_master', 'codef_master_secret', authTokenCallback);
+    requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
   } else {
     var dict = JSON.parse(urlencode.decode(body))
 
@@ -209,7 +209,7 @@ response.on('end', function() {
   // 데이저 수신 완료
   if(response.statusCode == 401) {
     // reissue token
-    requestToken(tokenUrl, 'codef_master', 'codef_master_secret', authTokenCallback);
+    requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
   } else {
     var dict = JSON.parse(urlencode.decode(body))
 
@@ -282,7 +282,7 @@ var codefApiCallback = function(response){
     if(response.statusCode == 200) {
       console.log('정상처리');
     } else if(response.statusCode == 401) {
-      requestToken(token_url, 'codef_master', 'codef_master_secret');
+      requestToken(token_url, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
     } else {
       console.log('API 요청 오류');
     }
