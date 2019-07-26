@@ -1,3 +1,11 @@
+/**
+ * 겨정등록 API
+ *
+ * @author 	: codef
+ * @date 	: 2019-07-26 09:00:00
+ * @version : 1.0.0
+ */
+
 var https = require('https');
 var parse = require('url-parse')
 var urlencode = require('urlencode');
@@ -43,15 +51,37 @@ var requestToken = function(url, client_id, client_secret, callback) {
 }
 // ========== Toekn 재발급  ==========
 
+# ========== RSA Encrypt  ==========
+def publicEncRSA(publicKey, data):
+    keyDER = base64.b64decode(pubKey)
+    keyPub = RSA.importKey(keyDER)
+    cipher = Cipher_PKCS1_v1_5.new(keyPub)
+    cipher_text = cipher.encrypt(data.encode())
 
-// Token URL
-var tokenUrl = 'https://toauth.codef.io/oauth/token'
+    encryptedData = base64.b64encode(cipher_text)
+    print('encryptedData = ' + encryptedData)
 
-// CODEF 연결 아이디
-var connectedId = ''
+    return encryptedData
+# ========== RSA Encrypt  ==========
 
-// 기 발급된 토큰
-var token ='eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX3R5cGUiOiIwIiwic2NvcGUiOlsicmVhZCJdLCJzZXJ2aWNlX25vIjoiOTk5OTk5OTk5OSIsImV4cCI6MTU2MjczNjUyNywiYXV0aG9yaXRpZXMiOlsiSU5TVVJBTkNFIiwiUFVCTElDIiwiQkFOSyIsIkVUQyIsIlNUT0NLIiwiQ0FSRCJdLCJqdGkiOiIyODBhNjVkOS02NjU1LTQ5MzYtODEwNS05MjUyYTk4MGRjMDgiLCJjbGllbnRfaWQiOiJjb2RlZl9tYXN0ZXIifQ.eFCEgxcntsEkjFORAWGSi6949UMOuCxVsm2wnYlDXqrHWXXwG7-XfKugsBNone_qRRGeKD3iv6f_TEcVMWyTz8aS0fRbE514LVz6PnzKbruyPNDA5Pk3ym8up9h4Ba1ix__Bvpu_TB0Y7Fikk9YHWHacJy4F_WOjr8xFP-q2egh763_LqVUzRakGQoLOTukduZ5zH5lfSO1Z9yx2cnDkY4VSM9DTbycSZuA2oQkMVpXJc0slEyWLw7WNX5E-ff3fL6ePfJvu7by_4KmgmmJkOoKBWvJ00DwrwhAa1EZmjqGPYG6RE6wxSwsu3lYeiCX-jSGm_cbKdk7YDnYxm8FKzg'
+# ========== Encode string data  ==========
+def stringToBase64(s):
+    return base64.b64encode(s.encode('utf-8'))
+
+def base64ToString(b):
+    return base64.b64decode(b).decode('utf-8')
+# ========== Encode string data  ==========
+
+# token URL
+token_url = 'https://toauth.codef.io/oauth/token'
+
+# CODEF 연결 아이디
+connected_id = ''
+
+# 기 발급된 토큰
+token =''
+
+pubKey = 'CODEF로부터 발급받은 publicKey';
 
 //////////////////////////////////////////////////////////////////////////////
 //                               계정 생성 Sample                             //
@@ -78,9 +108,9 @@ var codefAccountCreateBody = {
                   'clientType':'P',
                   'organization':'0004',
                   'loginType':'0',
-                  'password':'1234',      // 인증서 비밀번호 입력
-                  'derFile':'MIIF...',    // 인증서 인증서 DerFile
-                  'keyFile':'MIIF...'     // 인증서 인증서 KeyFile
+                  'password':publicEncRSA(pubKey, '1234'),  // 인증서 비밀번호 입력
+                  'derFile':'MIIF...',                      // 인증서 인증서 DerFile
+                  'keyFile':'MIIF...'                       // 인증서 인증서 KeyFile
                 }
             ]
 }
@@ -174,9 +204,9 @@ var codefAccountAddBody = {
                   'clientType':'P',
                   'organization':'0020',
                   'loginType':'0',
-                  'password':'1234',      // 인증서 비밀번호 입력
-                  'derFile':'MIIF...',    // 인증서 인증서 DerFile
-                  'keyFile':'MIIF...'     // 인증서 인증서 KeyFile
+                  'password':publicEncRSA(pubKey, '1234'),  // 인증서 비밀번호 입력
+                  'derFile':'MIIF...',                      // 인증서 인증서 DerFile
+                  'keyFile':'MIIF...'                       // 인증서 인증서 KeyFile
                 }
             ]
 }
@@ -266,10 +296,9 @@ var codefAccountUpdateBody = {
                   'businessType':'BK',
                   'clientType':'P',
                   'organization':'0020',
-                  'loginType':'0',
-                  'password':'1234',      // 인증서 비밀번호 입력
-                  'derFile':'MIIF...',    // 인증서 인증서 DerFile
-                  'keyFile':'MIIF...'     // 인증서 인증서 KeyFile
+                  'password':publicEncRSA(pubKey, '1234'),  // 인증서 비밀번호 입력
+                  'derFile':'MIIF...',                      // 인증서 인증서 DerFile
+                  'keyFile':'MIIF...'                       // 인증서 인증서 KeyFile
                 }
             ]
 }
@@ -363,9 +392,9 @@ var codefAccountDeleteBody = {
                   'clientType':'P',
                   'organization':'0020',
                   'loginType':'0',
-                  'password':'1234',      // 인증서 비밀번호 입력
-                  'derFile':'MIIF...',    // 인증서 인증서 DerFile
-                  'keyFile':'MIIF...'     // 인증서 인증서 KeyFile
+                  'password':publicEncRSA(pubKey, '1234'),  // 인증서 비밀번호 입력
+                  'derFile':'MIIF...',                      // 인증서 인증서 DerFile
+                  'keyFile':'MIIF...'                       // 인증서 인증서 KeyFile
                 }
             ]
 }

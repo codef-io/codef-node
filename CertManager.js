@@ -1,3 +1,11 @@
+/**
+ * 인증서 변환 테스트
+ *
+ * @author 	: codef
+ * @date 	: 2019-07-26 09:00:00
+ * @version : 1.0.0
+ */
+
 var fs = require('fs');
 
 // function to encode file data to base64 encoded string
