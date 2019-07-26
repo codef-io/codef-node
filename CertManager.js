@@ -16,9 +16,8 @@ function base64_decode(base64str, file) {
     fs.writeFileSync(file, f);
 }
 
-// convert image to base64 encoded string
-var derFileB64 = base64_encode('/Users/skcrackers/Documents/cobweb/Modules/modules/certification/ssk/signCert.der')
-var keyFileB64 = base64_encode('/Users/skcrackers/Documents/cobweb/Modules/modules/certification/ssk/signPri.key')
+var derFileB64 = base64_encode('/Users/skcrackers/Documents/cobweb/Modules/certification/ssk/signCert.der')
+var keyFileB64 = base64_encode('/Users/skcrackers/Documents/cobweb/Modules/certification/ssk/signPri.key')
 
 console.log('derFileB64 = ' + derFileB64)
 console.log('keyFileB64 = ' + keyFileB64)

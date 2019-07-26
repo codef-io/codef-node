@@ -1,3 +1,11 @@
+/**
+ * 은행 법인 수시입출 거래내역
+ *
+ * @author 	: codef
+ * @date 	: 2019-07-26 09:00:00
+ * @version : 1.0.0
+ */
+
 var https = require('https');
 var parse = require('url-parse')
 var urlencode = require('urlencode');
@@ -10,7 +18,7 @@ var httpSender = function(url, token, body) {
   var request = https.request({
     hostname: uri.hostname,
     path: uri.pathname,
-    port : uri.port,
+    port: uri.port,
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -32,7 +40,7 @@ var requestToken = function(url, client_id, client_secret) {
   var request = https.request({
     hostname: uri.hostname,
     path: uri.pathname,
-    port : uri.port,
+    port: uri.port,
     method: 'POST',
     headers: {
       'Acceppt': 'application/json',
@@ -45,24 +53,28 @@ var requestToken = function(url, client_id, client_secret) {
 }
 // ========== Toekn 재발급  ==========
 
-
 var codef_url = 'https://tapi.codef.io'
 var token_url = 'https://toauth.codef.io/oauth/token'
 
-// 은행 법인 보유계좌
-var account_list_path = '/v1/kr/bank/b/account/account-list'
+// 은행 법인 수시입출 거래내역
+var account_list_path = '/v1/kr/bank/b/account/transaction-list'
 
 // 기 발급된 토큰
-var token ='eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX3R5cGUiOiIwIiwic2NvcGUiOlsicmVhZCJdLCJzZXJ2aWNlX25vIjoiOTk5OTk5OTk5OSIsImV4cCI6MTU2MjczNjUyNywiYXV0aG9yaXRpZXMiOlsiSU5TVVJBTkNFIiwiUFVCTElDIiwiQkFOSyIsIkVUQyIsIlNUT0NLIiwiQ0FSRCJdLCJqdGkiOiIyODBhNjVkOS02NjU1LTQ5MzYtODEwNS05MjUyYTk4MGRjMDgiLCJjbGllbnRfaWQiOiJjb2RlZl9tYXN0ZXIifQ.eFCEgxcntsEkjFORAWGSi6949UMOuCxVsm2wnYlDXqrHWXXwG7-XfKugsBNone_qRRGeKD3iv6f_TEcVMWyTz8aS0fRbE514LVz6PnzKbruyPNDA5Pk3ym8up9h4Ba1ix__Bvpu_TB0Y7Fikk9YHWHacJy4F_WOjr8xFP-q2egh763_LqVUzRakGQoLOTukduZ5zH5lfSO1Z9yx2cnDkY4VSM9DTbycSZuA2oQkMVpXJc0slEyWLw7WNX5E-ff3fL6ePfJvu7by_4KmgmmJkOoKBWvJ00DwrwhAa1EZmjqGPYG6RE6wxSwsu3lYeiCX-jSGm_cbKdk7YDnYxm8FKzg'
+var token = ''
 
 // BodyData
 var codef_api_body = {
-  "connected_id":"9LUm.uhVQbzaangazwI0tr",
-  "organization":"0011"
+  "connectedId": '9LUm.uhVQbzaangazwI0tr',     // 엔드유저의 은행/카드사 계정 등록 후 발급받은 커넥티드아이디 예시
+  "organization": "기관코드",
+  "account": "계좌번호",
+  "startDate": "조회시작일자",
+  "endDate": "조회종료일자",
+  "orderBy": "정렬기준",
+  "inquiryType": "조회구분"
 }
 
 // Auth Token Callback
-var authTokenCallback = function(response){
+var authTokenCallback = function(response) {
   console.log('authTokenCallback Status: ' + response.statusCode);
   console.log('authTokenCallback Headers: ' + JSON.stringify(response.headers));
 
@@ -77,7 +89,7 @@ var authTokenCallback = function(response){
     // 데이저 수신 완료
     console.log('authTokenCallback body = ' + body);
     token = JSON.parse(body).access_token;
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       console.log('토큰발급 성공')
       console.log('token = ' + token);
 
@@ -90,7 +102,7 @@ var authTokenCallback = function(response){
 }
 
 // CODEF API Callback
-var codefApiCallback = function(response){
+var codefApiCallback = function(response) {
   console.log('codefApiCallback Status: ' + response.statusCode);
   console.log('codefApiCallback Headers: ' + JSON.stringify(response.headers));
 
@@ -105,9 +117,9 @@ var codefApiCallback = function(response){
     console.log('codefApiCallback body:' + urlencode.decode(body));
 
     // 데이저 수신 완료
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       console.log('정상처리');
-    } else if(response.statusCode == 401) {
+    } else if (response.statusCode == 401) {
       requestToken(token_url, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키');
     } else {
       console.log('API 요청 오류');
