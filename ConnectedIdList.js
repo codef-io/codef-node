@@ -2,7 +2,7 @@
  * 계정목록조회
  *
  * @author 	: codef
- * @date 	: 2019-07-26 09:00:00
+ * @date 	: 2019-07-29 09:00:00
  * @version : 1.0.0
  */
 
@@ -57,17 +57,14 @@ var codef_url = 'https://tapi.codef.io'
 var token_url = 'https://toauth.codef.io/oauth/token'
 
 // 계정목록조회
-var account_list_path = '/v1/account/list'
-
-// CODEF 연결 아이디
-var connectedId = '9LUm.uhVQbzaangazwI0tr';     // 엔드유저의 은행/카드사 계정 등록 후 발급받은 커넥티드아이디 예시
+var account_list_path = '/v1/account/connectedId-list'
 
 // 기 발급된 토큰
 var token = ''
 
 // BodyData
 var codef_api_body = {
-  "connectedId":connectedId
+    'pageNo':'5'            // 페이지 번호(생략 가능) 생략시 1페이지 값(0) 자동 설정
 }
 
 // Auth Token Callback
