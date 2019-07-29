@@ -48,50 +48,83 @@ var requestToken = function(url, client_id, client_secret, callback) {
 
 ```
 ```json
-{"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX3R5cGUiOiIwIiwic2NvcGUiOlsicmVhZCJdLCJzZXJ2aWNlX25vIjoiMDAwMDAwMDQyMDAxIiwiZXhwIjoxNTYyNjc0NTczLCJhdXRob3JpdGllcyI6WyJJTlNVUkFOQ0UiLCJQVUJMSUMiLCJCQU5LIiwiRVRDIiwiU1RPQ0siLCJDQVJEIl0sImp0aSI6ImFiNTBjM2RmLWQ3MzctNGE2Ny04Zjg4LWQzOTE2YTNiYmNiMSIsImNsaWVudF9pZCI6ImNvZGVmX21hc3RlciJ9.EXBV-D89_zoYmFdiULahGqcp1T2Du8DM51Trf1fD4MxsKYsA1t37ovffIKIQvqLHwQz4W8EqC6s8lM1V_IqFG5D5yafmyvprVi7ciqRMBBIsnEZN8xk1gBqLydtwkG0jKTrCLTBls8zATHbWV8BO6oUw8fwQId4ExeewbqeflSBCLOztb4c8UkR1WFDqQs63Ezry8k79VN5HPSktChJGnGq0xWmtbMlwv8IubvveJkMLz-6Iw6hlSMjeat_fv-gZCPTPdoaMa-BPxcAhI772cSCrfJNzori0uVFIeBEInabDzAKpXjvbsZEz_q70QGGSPkoslxFb_N-MYSNPgCWEvw","token_type":"bearer","expires_in":9,"scope":"read"}
+{
+  "access_token" : "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX3R5cGUiOiIwIiwic2NvcGUiOlsicmVhZCJdLCJzZXJ2aWNlX25vIjoiMDAwMDAwMDQyMDAxIiwiZXhwIjoxNTYzOTQ4NDQ2LCJhdXRob3JpdGllcyI6WyJJTlNVUkFOQ0UiLCJQVUJMSUMiLCJCQU5LIiwiRVRDIiwiU1RPQ0siLCJDQVJEIl0sImp0aSI6Ijc4NDUyMjY4LWFkNDctNGVhNS04ZjljLTQ5ZWI5Yjk1YmQxZCIsImNsaWVudF9pZCI6ImNvZGVmX21hc3RlciJ9.ddZ38ARfTIa4_E8by6gITeIadhQKeDDG4YoGQdGiu-n2sJ1iQ7z81dsMJtc9-YYV-ItIcEn5OXqnIZlGaeF8Ya6Jqy6XdrIb8ou5Sq-jYoB6UXyQRzQsV_1oIIXYSeQtQKalSpPbGGOgLaXsm61fBKimFnnCd1anhxtZAIHwCLMbvQCZlwOeTls1F1EEOvQ76qcdUcmsw-LHM_9I68DwjIwAjyOTe4WPMhsK6KD4MryCAfZRAmdRhG6BWVKk_8D1JPFy42qQmILAr9LXOMODqnVaNeGA-izmtfX5KqqdYxAR6XV_7B9muzYPyGnBL_l2pEcLq5kVSL7YGtczwqB-AA",
+  "scope" : "read",
+  "token_type" : "bearer",
+  "expires_in" : 604799
+}
 ```
 
 
 ### 계정 생성
 
 CODEF API를 사용하기 위해서는 엔드유저가 사용하는 대상기관의 인증수단 등록이 필요하며, 이를 통해 사용자마다 유니크한 'connected_id'를 발급받을 수 있습니다.
-이후에는 별도의 인증수단 전송 없이 'connected_id'를 통해서 대상기관의 데이터를 연동할 수 있습니다.
+이후에는 별도의 인증수단 전송 없이 'connected_id'를 통해서 대상기관의 데이터를 연동할 수 있습니다. 'connected_id' 발급은 최초 계정 생성 요청시에만 가능하며 이후에 엔드유저의 인증수단 관리는 계정 추가, 계정 수정, 계정 삭제 거래를 이용해야 합니다.
+
+* 은행/카드 업무의 경우 동일한 기관에 등록 가능한 인증수단은 개인 고객/기업 고객 각각 1건입니다.
+* API서버를 향한 모든 요청 파라미터는 URLEncoder를 통해 UTF-8로 인코딩되어야 합니다. (RegisterAccount.java 참조)
 
 ```javascript
 codef_account_create_url = 'https://api.codef.io/v1/account/create'
 codef_account_create_body = {
             'accountList':[                  // 계정목록
-                {
-                  'countryCode':'KR',        // 국가코드
-                  'businessType':'BK',       // 비즈니스 구분
-                  'clientType':'P',          // 고객구분(P: 개인, B: 기업)
-                  'organization':'0004',     // 기관코드
-                  'loginType':'0',           // 로그인타입 (0: 인증서, 1: ID/PW)
-                  'password':'1234',         // 인증서 비밀번호             
-                  'derFile':'인증서 DerFile',  // Base64String
-                  'keyFile':'인증서 KeyFile'   // Base64String
-                }
+              {
+                  'countryCode':'KR',        # 국가코드
+                  'businessType':'BK',       # 비즈니스 구분
+                  'clientType':'P',          # 고객구분(P: 개인, B: 기업)
+                  'organization':'0003',     # 기관코드
+                  'loginType':'0',           # 로그인타입 (0: 인증서, 1: ID/PW)
+                  'password':publicEncRSA(pubKey, '1234'),    # 엔드유저의 인증서 비밀번호 입력
+                  'derFile':'MIIF...',                        # 엔드유저의 인증서 인증서 DerFile
+                  'keyFile':'MIIF...'                         # 엔드유저의 인증서 인증서 KeyFile
+              },
+              {
+                  'countryCode':'KR',        # 국가코드
+                  'businessType':'BK',       # 비즈니스 구분
+                  'clientType':'P',          # 고객구분(P: 개인, B: 기업)
+                  'organization':'0004',     # 기관코드
+                  'loginType':'0',           # 로그인타입 (0: 인증서, 1: ID/PW)
+                  'password':publicEncRSA(pubKey, '1234'),    # 엔드유저의 인증서 비밀번호 입력
+                  'derFile':'MIIF...',                        # 엔드유저의 인증서 인증서 DerFile
+                  'keyFile':'MIIF...'                         # 엔드유저의 인증서 인증서 KeyFile
+              }
             ]
 }
 
 # CODEF API 호출
 httpSender(codef_account_create_url, token, codef_account_create_body, callback)
-response.on('end', function() {
-  // 데이저 수신 완료
-  if(response.statusCode == 401) {
-    // reissue token
-    requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
-  } else {
-    var dict = JSON.parse(urlencode.decode(body))
-
-    connectedId = dict.data.connectedId;
-    console.log('connectedId = ' + connectedId);
-    console.log('계정생성 정상처리');
-  }
-});
 ```
 ```json
-{"result":{"code":"CF-00000","extraMessage":"","message":"정상"},"data":{"organizationList":[{"clientType":"P","loginType":"0","organization":"0004","businessType":"BK"}],"connectedId":"dE-HSO244D-8Yf2nsMLunI"}}
+{
+  "result" : {
+    "code" : "CF-00000",
+    "extraMessage" : "",
+    "message" : "정상"
+  },
+  "data" : {
+    "successList" : [ {
+      "clientType" : "P",
+      "code" : "CF-00000",
+      "loginType" : "0",
+      "countryCode" : "KR",
+      "organization" : "0003",
+      "businessType" : "BK",
+      "message" : "성공"
+    }, {
+      "clientType" : "P",
+      "code" : "CF-00000",
+      "loginType" : "1",
+      "countryCode" : "KR",
+      "organization" : "0004",
+      "businessType" : "BK",
+      "message" : "성공"
+    } ],
+    "errorList" : [ ],
+    "connectedId" : "45t4DJOD44M9uwH7zxSgBg"
+  }
+}
+
 ```
 
 
@@ -100,41 +133,51 @@ response.on('end', function() {
 계정 생성을 통해 발급받은 'connected_id'에 추가 기관의 인증수단을 등록할 수 있습니다. 추가 등록한 기관을 포함하여 이후에는 별도의 인증수단 전송없이
 'connected_id'를 통해서 대상기관의 데이터를 연동할 수 있습니다.
 
+* 은행/카드 업무의 경우 동일한 기관에 등록 가능한 인증수단은 개인 고객/기업 고객 각각 1건입니다.
+* API서버를 향한 모든 요청 파라미터는 URLEncoder를 통해 UTF-8로 인코딩되어야 합니다. (RegisterAccount.java 참조)
+
 ```javascript
 codef_account_create_url = 'https://api.codef.io/v1/account/add'
 codef_account_create_body = {
-            'connectedId': '계정생성 시 발급받은 아이디',    // connected_id
+            'connectedId': '엔드유저의 은행/카드사 계정 등록 후 발급받은 커넥티드아이디 입력',    # connected_id
             'accountList':[                  // 계정목록
                 {
-                  'countryCode':'KR',        // 국가코드
-                  'businessType':'BK',       // 비즈니스 구분
-                  'clientType':'P',          // 고객구분(P: 개인, B: 기업)
-                  'organization':'0020',     // 기관코드
-                  'loginType':'0',           // 로그인타입 (0: 인증서, 1: ID/PW)
-                  'derFile':'인증서 DerFile',  // Base64String
-                  'keyFile':'인증서 KeyFile'   // Base64String
+                  'countryCode':'KR',        # 국가코드
+                  'businessType':'BK',       # 비즈니스 구분
+                  'clientType':'P',          # 고객구분(P: 개인, B: 기업)
+                  'organization':'0020',     # 기관코드
+                  'loginType':'0',           # 로그인타입 (0: 인증서, 1: ID/PW)
+                  'password':publicEncRSA(pubKey, '1234'),    # 엔드유저의 인증서 비밀번호 입력
+                  'derFile':'MIIF...',                        # 엔드유저의 인증서 인증서 DerFile
+                  'keyFile':'MIIF...'                         # 엔드유저의 인증서 인증서 KeyFile
                 }
             ]
 }
 
 # CODEF API 호출
 httpSender(codef_account_add_url, token, codef_account_add_body, callback)
-response.on('end', function() {
-  // 데이저 수신 완료
-  if(response.statusCode == 401) {
-    // reissue token
-    requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
-  } else {
-    var dict = JSON.parse(urlencode.decode(body))
-
-    connectedId = dict.data.connectedId;
-    console.log('connectedId = ' + connectedId);
-    console.log('계정추가 정상처리');
-  }
-});
 ```
 ```json
-{"result":{"code":"CF-00000","extraMessage":"","message":"정상"},"data":{"successList":[{"clientType":"P","code":"CF-00000","countryCode":"KR","organization":"0020","businessType":"BK","message":"성공"}],"errorList":[],"connectedId":"9cbO3CatAhzbqR5JNOX5IZ"}}
+{
+  "result" : {
+    "code" : "CF-00000",
+    "extraMessage" : "",
+    "message" : "정상"
+  },
+  "data" : {
+    "successList" : [ {
+      "clientType" : "P",
+      "code" : "CF-00000",
+      "loginType" : "0",
+      "countryCode" : "KR",
+      "organization" : "0020",
+      "businessType" : "BK",
+      "message" : "성공"
+    } ],
+    "errorList" : [ ],
+    "connectedId" : "45t4DJOD44M9uwH7zxSgBg"
+  }
+}
 ```
 
 
@@ -143,41 +186,50 @@ response.on('end', function() {
 계정 생성을 통해 발급받은 'connected_id'에 등록된 기관의 인증수단을 변경할 수 있습니다. 변경 요청한 기관의 인증 수단은 호출 즉시 변경되며, 이 후
 'connected_id'를 통해서 대상기관의 데이터를 연동할 수 있습니다.
 
+* API서버를 향한 모든 요청 파라미터는 URLEncoder를 통해 UTF-8로 인코딩되어야 합니다. (RegisterAccount.java 참조)
+
 ```javascript
 codef_account_update_url = 'https://api.codef.io/v1/account/update'
 codef_account_update_body = {
             'connectedId': '계정생성 시 발급받은 아이디',    // connected_id
             'accountList':[                  // 계정목록
                 {
-                  'countryCode':'KR',        // 국가코드
-                  'businessType':'BK',       // 비즈니스 구분
-                  'clientType':'P',          // 고객구분(P: 개인, B: 기업)
-                  'organization':'0020',     // 기관코드
-                  'loginType':'0',           // 로그인타입 (0: 인증서, 1: ID/PW)
-                  'derFile':'인증서 DerFile',  // Base64String
-                  'keyFile':'인증서 KeyFile'   // Base64String
+                  'countryCode':'KR',        # 국가코드
+                  'businessType':'BK',       # 비즈니스 구분
+                  'clientType':'P',          # 고객구분(P: 개인, B: 기업)
+                  'organization':'0020',     # 기관코드
+                  'loginType':'0',           # 로그인타입 (0: 인증서, 1: ID/PW)
+                  'password':publicEncRSA(pubKey, '1234'),    # 엔드유저의 인증서 비밀번호 입력   
+                  'derFile':'인증서 DerFile',  # Base64String
+                  'keyFile':'인증서 KeyFile'   # Base64String
                 }
             ]
 }
 
 # CODEF API 호출
 httpSender(codef_account_update_url, token, codef_account_update_body,callback)
-response.on('end', function() {
-  // 데이저 수신 완료
-  if(response.statusCode == 401) {
-    // reissue token
-    requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
-  } else {
-    var dict = JSON.parse(urlencode.decode(body))
-
-    connectedId = dict.data.connectedId;
-    console.log('connectedId = ' + connectedId);
-    console.log('계정수정 정상처리');
-  }
-});
 ```
 ```json
-{"result":{"code":"CF-00000","extraMessage":"","message":"정상"},"data":{"successList":[{"clientType":"P","code":"CF-00000","countryCode":"KR","organization":"0020","businessType":"BK","message":"성공"}],"errorList":[],"connectedId":"9cbO3CatAhzbqR5JNOX5IZ"}}
+{
+  "result" : {
+    "code" : "CF-00000",
+    "extraMessage" : "",
+    "message" : "정상"
+  },
+  "data" : {
+    "successList" : [ {
+      "clientType" : "P",
+      "code" : "CF-00000",
+      "loginType" : "0",
+      "countryCode" : "KR",
+      "organization" : "0020",
+      "businessType" : "BK",
+      "message" : "성공"
+    } ],
+    "errorList" : [ ],
+    "connectedId" : "45t4DJOD44M9uwH7zxSgBg"
+  }
+}
 ```
 
 
@@ -186,41 +238,160 @@ response.on('end', function() {
 엔드유저가 등록된 계정의 삭제를 요청 시 'connected_id'에 등록된 기관의 인증수단을 즉시 삭제할 수 있습니다. 요청한 기관의 인증 수단은 호출 즉시 삭제되며,
 해당 데이터는 복구할 수 없습니다.
 
+* API서버를 향한 모든 요청 파라미터는 URLEncoder를 통해 UTF-8로 인코딩되어야 합니다. (RegisterAccount.java 참조)
+
 ```javascript
 codef_account_delete_url = 'https://api.codef.io/v1/account/delete'
 codef_account_delete_body = {
           'connectedId': '계정생성 시 발급받은 아이디',    // connected_id
           'accountList':[                  // 계정목록
               {
-                'countryCode':'KR',        // 국가코드
-                'businessType':'BK',       // 비즈니스 구분
-                'clientType':'P',          // 고객구분(P: 개인, B: 기업)
-                'organization':'0020',     // 기관코드
-                'loginType':'0',           // 로그인타입 (0: 인증서, 1: ID/PW)
-                'derFile':'인증서 DerFile',  // Base64String
-                'keyFile':'인증서 KeyFile'   // Base64String
+                'countryCode':'KR',        # 국가코드
+                'businessType':'BK',       # 비즈니스 구분
+                'clientType':'P',          # 고객구분(P: 개인, B: 기업)
+                'organization':'0020',     # 기관코드
+                'loginType':'0',           # 로그인타입 (0: 인증서, 1: ID/PW)
               }
             ]
 }
 
 # CODEF API 호출
 httpSender(codef_account_delete_url, token, codef_account_delete_body, callback)
-response.on('end', function() {
-  // 데이저 수신 완료
-  if(response.statusCode == 401) {
-    // reissue token
-    requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
-  } else {
-    var dict = JSON.parse(urlencode.decode(body))
-
-    connectedId = dict.data.connectedId;
-    console.log('connectedId = ' + connectedId);
-    console.log('계정삭제 정상처리');
-  }
-});
 ```
 ```json
-{"result":{"code":"CF-00000","extraMessage":"","message":"정상"},"data":{"organizationList":[{"clientType":"P","loginType":"0","countryCode":"KR","organization":"0020","businessType":"BK"}],"connectedId":"9cbO3CatAhzbqR5JNOX5IZ"}}
+{
+  "result" : {
+    "code" : "CF-00000",
+    "extraMessage" : "",
+    "message" : "정상"
+  },
+  "data" : {
+    "successList" : [ {
+      "clientType" : "P",
+      "loginType" : "0",
+      "countryCode" : "KR",
+      "organization" : "0020",
+      "businessType" : "BK"
+    } ],
+    "connectedId" : "45t4DJOD44M9uwH7zxSgBg"
+  }
+}
+```
+
+
+### 계정 목록 조회
+
+계정 등록, 추가 등을 통해 CODEF에 등록된 엔드 유저의 인증수단 정보 목록에 대한 조회를 요청할 수 있습니다. 엔드유저에 대한 유니크한 식별값인 'connectedId'를 요청 파라미터로 사용하며 해당 'connectedId'에 연결된 인증수단 정보 목록을 반환합니다.
+
+* API서버를 향한 모든 요청 파라미터는 URLEncoder를 통해 UTF-8로 인코딩되어야 합니다. (accountList.js 참조)
+
+```javascript
+var codef_account_list_url = 'https://api.codef.io/v1/account/list'
+var codef_account_list_body = {
+  "connectedId":connectedId
+}
+
+# CODEF API 호출
+response_account_list = http_sender(codef_account_list_url, token, codef_account_list_body)
+```
+```json
+{
+  "result" : {
+    "code" : "CF-00000",
+    "extraMessage" : "",
+    "message" : "성공"
+  },
+  "data" : {
+    "accountList" : [ {
+      "clientType" : "B",
+      "organizationCode" : "0003",
+      "loginType" : "0",
+      "countryCode" : "KR",
+      "businessType" : "BK"
+    }, {
+      "clientType" : "B",
+      "organizationCode" : "0004",
+      "loginType" : "0",
+      "countryCode" : "KR",
+      "businessType" : "BK"
+    }, {
+      "clientType" : "P",
+      "organizationCode" : "0004",
+      "loginType" : "0",
+      "countryCode" : "KR",
+      "businessType" : "BK"
+    }, {
+      "clientType" : "B",
+      "organizationCode" : "0011",
+      "loginType" : "0",
+      "countryCode" : "KR",
+      "businessType" : "BK"
+    }, {
+      "clientType" : "P",
+      "organizationCode" : "0020",
+      "loginType" : "1",
+      "countryCode" : "KR",
+      "businessType" : "BK"
+    }, {
+      "clientType" : "B",
+      "organizationCode" : "0301",
+      "loginType" : "0",
+      "countryCode" : "KR",
+      "businessType" : "CD"
+    }, {
+      "clientType" : "P",
+      "organizationCode" : "0302",
+      "loginType" : "0",
+      "countryCode" : "KR",
+      "businessType" : "CD"
+    }, {
+      "clientType" : "B",
+      "organizationCode" : "0309",
+      "loginType" : "0",
+      "countryCode" : "KR",
+      "businessType" : "CD"
+    }, {
+      "clientType" : "P",
+      "organizationCode" : "0309",
+      "loginType" : "0",
+      "countryCode" : "KR",
+      "businessType" : "CD"
+    } ],
+    "connectedId" : "bybF-S85kX998Trh23JUVb"
+  }
+}
+```
+
+
+### 'connectedId' 목록 조회
+
+CODEF로부터 발급된 'connectedId'의 목록에 대한 조회를 요청할 수 있습니다. 요청 결과는 페이징(5만건) 단위로 전송되며 결과 값(hasNext == true)에 따라 다음 페이지(nextPageNo)에 대한 요청이 가능합니다.
+
+* API서버를 향한 모든 요청 파라미터는 URLEncoder를 통해 UTF-8로 인코딩되어야 합니다. (connectedIdList.js 참조)
+
+```javascript
+var codef_connected_id_list_url = 'https://api.codef.io/v1/account/connectedId-list'
+var codef_connected_id_list_body = {
+    'pageNo':'5'            # 페이지 번호(생략 가능) 생략시 1페이지 값(0) 자동 설정
+}
+
+# CODEF API 호출
+response_connected_id_list = http_sender(codef_connected_id_list_url, token, codef_connected_id_list_body)
+```
+```json
+{
+  "result" : {
+    "code" : "CF-00000",
+    "extraMessage" : "",
+    "message" : "성공"
+  },
+  "data" : {
+    "connectedIdList" : [ "6OOOZ58zAU.aX0pRRgzEBk", "bybF-S85kX998Trh23JUVb" ],
+    "pageNo" : 0,
+    "hasNext" : true,
+    "nextPageNo" : 1
+  }
+}
 ```
 
 
