@@ -66,8 +66,8 @@ CODEF API를 사용하기 위해서는 엔드유저가 사용하는 대상기관
 * API서버를 향한 모든 요청 파라미터는 URLEncoder를 통해 UTF-8로 인코딩되어야 합니다. (RegisterAccount.java 참조)
 
 ```javascript
-codef_account_create_url = 'https://api.codef.io/v1/account/create'
-codef_account_create_body = {
+var codef_account_create_url = 'https://api.codef.io/v1/account/create'
+var codef_account_create_body = {
             'accountList':[                  // 계정목록
               {
                   'countryCode':'KR',        # 국가코드
@@ -137,8 +137,8 @@ httpSender(codef_account_create_url, token, codef_account_create_body, callback)
 * API서버를 향한 모든 요청 파라미터는 URLEncoder를 통해 UTF-8로 인코딩되어야 합니다. (RegisterAccount.java 참조)
 
 ```javascript
-codef_account_create_url = 'https://api.codef.io/v1/account/add'
-codef_account_create_body = {
+var codef_account_create_url = 'https://api.codef.io/v1/account/add'
+var codef_account_create_body = {
             'connectedId': '엔드유저의 은행/카드사 계정 등록 후 발급받은 커넥티드아이디 입력',    # connected_id
             'accountList':[                  // 계정목록
                 {
@@ -189,8 +189,8 @@ httpSender(codef_account_add_url, token, codef_account_add_body, callback)
 * API서버를 향한 모든 요청 파라미터는 URLEncoder를 통해 UTF-8로 인코딩되어야 합니다. (RegisterAccount.java 참조)
 
 ```javascript
-codef_account_update_url = 'https://api.codef.io/v1/account/update'
-codef_account_update_body = {
+var codef_account_update_url = 'https://api.codef.io/v1/account/update'
+var codef_account_update_body = {
             'connectedId': '계정생성 시 발급받은 아이디',    // connected_id
             'accountList':[                  // 계정목록
                 {
@@ -292,7 +292,7 @@ var codef_account_list_body = {
 }
 
 # CODEF API 호출
-response_account_list = http_sender(codef_account_list_url, token, codef_account_list_body)
+httpSender(codef_account_list_url, token, codef_account_list_body)
 ```
 ```json
 {
@@ -376,7 +376,7 @@ var codef_connected_id_list_body = {
 }
 
 # CODEF API 호출
-response_connected_id_list = http_sender(codef_connected_id_list_url, token, codef_connected_id_list_body)
+httpSender(codef_connected_id_list_url, token, codef_connected_id_list_body)
 ```
 ```json
 {
