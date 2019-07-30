@@ -57,7 +57,7 @@ var codef_url = 'https://tapi.codef.io'
 var token_url = 'https://toauth.codef.io/oauth/token'
 
 // 계정목록조회
-var account_list_path = '/v1/account/connectedId-list'
+var connected_id_list_path = '/v1/account/connectedId-list'
 
 // 기 발급된 토큰
 var token = ''
@@ -88,7 +88,7 @@ var authTokenCallback = function(response) {
       console.log('token = ' + token);
 
       // CODEF API 요청
-      httpSender(codef_url + account_list_path, token, codef_api_body);
+      httpSender(codef_url + connected_id_list_path, token, codef_api_body);
     } else {
       console.log('토큰발급 오류')
     }
