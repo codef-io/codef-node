@@ -57,7 +57,7 @@ var codef_url = 'https://tapi.codef.io'
 var token_url = 'https://toauth.codef.io/oauth/token'
 
 // 은행 법인  대출 거래내역
-var account_list_path = '/v1/kr/bank/b/loan/transaction-list'
+var transaction_list_path = '/v1/kr/bank/b/loan/transaction-list'
 
 // 기 발급된 토큰
 var token = ''
@@ -94,7 +94,7 @@ var authTokenCallback = function(response) {
       console.log('token = ' + token);
 
       // CODEF API 요청
-      httpSender(codef_url + account_list_path, token, codef_api_body);
+      httpSender(codef_url + transaction_list_path, token, codef_api_body);
     } else {
       console.log('토큰발급 오류')
     }
@@ -128,4 +128,4 @@ var codefApiCallback = function(response) {
 }
 
 // CODEF API 요청
-httpSender(codef_url + account_list_path, token, codef_api_body);
+httpSender(codef_url + transaction_list_path, token, codef_api_body);

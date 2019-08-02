@@ -1,5 +1,5 @@
 /**
- * 은행 법인 펀드 거래내역
+ * 은행 기업 빠른계좌조회
  *
  * @author 	: codef
  * @date 	: 2019-07-26 09:00:00
@@ -56,21 +56,26 @@ var requestToken = function(url, client_id, client_secret) {
 var codef_url = 'https://tapi.codef.io'
 var token_url = 'https://toauth.codef.io/oauth/token'
 
-// 은행 법인 펀드 거래내역
-var transaction_list_path = '/v1/kr/bank/b/fund/transaction-list'
+// 은행 기업 빠른계좌조회
+var transaction_list_path = '/v1/kr/bank/b/fast-account/transaction-list'
 
 // 기 발급된 토큰
 var token = ''
 
 // BodyData
 var codef_api_body = {
-  "connectedId": '9LUm.uhVQbzaangazwI0tr',     // 엔드유저의 은행/카드사 계정 등록 후 발급받은 커넥티드아이디 예시
-  "organization": "기관코드"
+  "id": "로그인 아이디",
+  "password": "로그인 패스워드",
+  "fastId": "조회전용 ID",
+  "fastPassword": "조회전용 Password",
+  "organization": "기관코드",
   "account": "계좌번호",
-  "startDate": "조회시작일자",
-  "endDate": "조회종료일자",
-  "orderBy": "정렬기준",
-  "inquiryType": "조회구분"
+  "accountPassword": "계좌비밀번호",
+  "startDate": "시작일자",
+  "endDate": "종료일자",
+  "orderBy": "정렬순서",
+  "identity": "사용자 주민번호/사업자번호",
+  "smsAuthNo": "SMS인증번호"
 }
 
 // Auth Token Callback

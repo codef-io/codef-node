@@ -1,5 +1,5 @@
 /**
- * 은행 법인 보유계좌
+ * 은행 개인 보유계좌
  *
  * @author 	: codef
  * @date 	: 2019-07-26 09:00:00
@@ -53,19 +53,22 @@ var requestToken = function(url, client_id, client_secret) {
 }
 // ========== Toekn 재발급  ==========
 
-var codef_url = 'https://tapi.codef.io'
-var token_url = 'https://toauth.codef.io/oauth/token'
+// API서버 샌드박스 도메인
+var CODEF_URL = 'https://tsandbox.codef.io'
+var TOKEN_URL = 'https://toauth.codef.io/oauth/token'
+var SANDBOX_CLIENT_ID 	= "ef27cfaa-10c1-4470-adac-60ba476273f9";      // CODEF 샌드박스 클라이언트 아이디
+var SANDBOX_SECERET_KEY 	= "83160c33-9045-4915-86d8-809473cdf5c3";    // CODEF 샌드박스 클라이언트 시크릿
 
-// 은행 법인 보유계좌
-var account_list_path = '/v1/kr/bank/b/account/account-list'
+// 은행 개인 보유계좌
+var account_list_path = '/v1/kr/bank/p/account/account-list'
 
 // 기 발급된 토큰
 var token = ''
 
 // BodyData
 var codef_api_body = {
-  "connectedId": '9LUm.uhVQbzaangazwI0tr',     // 엔드유저의 은행/카드사 계정 등록 후 발급받은 커넥티드아이디 예시
-  "organization": "기관코드"
+  "connectedId": 'sandbox_connectedId',     // SANDBOX 커넥티드아이디
+  "organization": "0004"                    // 기관코드(https://developer.codef.io "은행 목록" 참조)
 }
 
 // Auth Token Callback
@@ -89,7 +92,7 @@ var authTokenCallback = function(response) {
       console.log('token = ' + token);
 
       // CODEF API 요청
-      httpSender(codef_url + account_list_path, token, codef_api_body);
+      httpSender(CODEF_URL + account_list_path, token, codef_api_body);
     } else {
       console.log('토큰발급 오류')
     }
@@ -115,7 +118,7 @@ var codefApiCallback = function(response) {
     if (response.statusCode == 200) {
       console.log('정상처리');
     } else if (response.statusCode == 401) {
-      requestToken(token_url, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키');
+      requestToken(TOKEN_URL, SANDBOX_CLIENT_ID, SANDBOX_SECERET_KEY);
     } else {
       console.log('API 요청 오류');
     }
@@ -123,4 +126,4 @@ var codefApiCallback = function(response) {
 }
 
 // CODEF API 요청
-httpSender(codef_url + account_list_path, token, codef_api_body);
+httpSender(CODEF_URL + account_list_path, token, codef_api_body);
