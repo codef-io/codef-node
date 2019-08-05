@@ -287,7 +287,7 @@ httpSender(codefAccountAddUrl, token, codefAccountAddBody, codefAccountAddCallba
 //   keyFile : 인증서 keyFile
 //
 //////////////////////////////////////////////////////////////////////////////
-var codefAccountUpdateUrl = 'https://tapi.codef.io/v1/account/add'
+var codefAccountUpdateUrl = 'https://tapi.codef.io/v1/account/update'
 var codefAccountUpdateBody = {
             'connectedId': '8-cXc.6lk-ib4Whi5zClVt',    // connected_id
             'accountList':[
@@ -382,7 +382,7 @@ httpSender(codefAccountUpdateUrl, token, codefAccountUpdateBody, codefAccountUpd
 //   keyFile : 인증서 keyFile
 //
 //////////////////////////////////////////////////////////////////////////////
-var codefAccountDeleteUrl = 'https://tapi.codef.io/v1/account/add'
+var codefAccountDeleteUrl = 'https://tapi.codef.io/v1/account/delete'
 var codefAccountDeleteBody = {
             'connectedId': '8-cXc.6lk-ib4Whi5zClVt',    // connected_id
             'accountList':[
@@ -391,10 +391,7 @@ var codefAccountDeleteBody = {
                   'businessType':'BK',
                   'clientType':'P',
                   'organization':'0020',
-                  'loginType':'0',
-                  'password':publicEncRSA(pubKey, '1234'),  // 인증서 비밀번호 입력
-                  'derFile':'MIIF...',                      // 인증서 인증서 DerFile
-                  'keyFile':'MIIF...'                       // 인증서 인증서 KeyFile
+                  'loginType':'0'
                 }
             ]
 }
