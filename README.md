@@ -23,7 +23,7 @@ CODEF API를 사용하기 위해서는 'access_token' 발행이 선행되어야 
 'access_token'을 발급 받기 위한 'client_id' 및 'client_secret'은 https://codef.io/#/account/keys 에서 확인할 수 있습니다.
 
 ```javascript
-var tokenUrl = 'https://api.codef.io/oauth/token'
+var tokenUrl = 'https://oauth.codef.io/oauth/token'
 requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
 
 var requestToken = function(url, client_id, client_secret, callback) {
