@@ -9,6 +9,7 @@
 var https = require('https');
 var parse = require('url-parse')
 var urlencode = require('urlencode');
+var nodersa = require('node-rsa');
 
 // ========== HTTP 기본 함수 ==========
 var httpSender = function(url, token, body, callback) {
@@ -51,34 +52,28 @@ var requestToken = function(url, client_id, client_secret, callback) {
 }
 // ========== Toekn 재발급  ==========
 
-# ========== RSA Encrypt  ==========
-def publicEncRSA(publicKey, data):
-    keyDER = base64.b64decode(pubKey)
-    keyPub = RSA.importKey(keyDER)
-    cipher = Cipher_PKCS1_v1_5.new(keyPub)
-    cipher_text = cipher.encrypt(data.encode())
+// ========== public Encrypt  ==========
+function publicEncRSA(publicKey, data) {
+    var pubkeyStr = "-----BEGIN PUBLIC KEY-----\n" + publicKey + "\n-----END PUBLIC KEY-----";
 
-    encryptedData = base64.b64encode(cipher_text)
-    print('encryptedData = ' + encryptedData)
+    var key = new nodersa();
+    key.importKey(pubkeyStr,'pkcs8-public');
 
-    return encryptedData
-# ========== RSA Encrypt  ==========
+    var encryptedData = key.encrypt( data, 'base64' );
 
-# ========== Encode string data  ==========
-def stringToBase64(s):
-    return base64.b64encode(s.encode('utf-8'))
+    console.log("\n Encrypted with public key : " + encryptedData);
 
-def base64ToString(b):
-    return base64.b64decode(b).decode('utf-8')
-# ========== Encode string data  ==========
+    return encryptedData;
+}
+// ========== public Encrypt  ==========
 
-# token URL
+// token URL
 token_url = 'https://toauth.codef.io/oauth/token'
 
-# CODEF 연결 아이디
+// CODEF 연결 아이디
 connected_id = ''
 
-# 기 발급된 토큰
+// 기 발급된 토큰
 token =''
 
 pubKey = 'CODEF로부터 발급받은 publicKey';
