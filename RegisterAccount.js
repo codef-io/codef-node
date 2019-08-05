@@ -9,7 +9,8 @@
 var https = require('https');
 var parse = require('url-parse')
 var urlencode = require('urlencode');
-var nodersa = require('node-rsa');
+var crypto = require("crypto");
+var constants = require("constants");
 
 // ========== HTTP 기본 함수 ==========
 var httpSender = function(url, token, body, callback) {
@@ -54,16 +55,13 @@ var requestToken = function(url, client_id, client_secret, callback) {
 
 // ========== public Encrypt  ==========
 function publicEncRSA(publicKey, data) {
-    var pubkeyStr = "-----BEGIN PUBLIC KEY-----\n" + publicKey + "\n-----END PUBLIC KEY-----";
+  var pubkeyStr = "-----BEGIN PUBLIC KEY-----\n" + publicKey + "\n-----END PUBLIC KEY-----";
+  var bufferToEncrypt = new Buffer(data);
+  var encryptedData = crypto.publicEncrypt({"key" : pubkeyStr, padding : constants.RSA_PKCS1_PADDING},bufferToEncrypt).toString("base64");
 
-    var key = new nodersa();
-    key.importKey(pubkeyStr,'pkcs8-public');
+  console.log(encryptedData);
 
-    var encryptedData = key.encrypt( data, 'base64' );
-
-    console.log("\n Encrypted with public key : " + encryptedData);
-
-    return encryptedData;
+  return encryptedData;
 }
 // ========== public Encrypt  ==========
 
