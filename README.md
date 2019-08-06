@@ -65,6 +65,7 @@ CODEF API를 사용하기 위해서는 엔드유저가 사용하는 대상기관
 
 * 은행/카드 업무의 경우 동일한 기관에 등록 가능한 인증수단은 개인 고객/기업 고객 각각 1건입니다.
 * API서버를 향한 모든 요청 파라미터는 URLEncoder를 통해 UTF-8로 인코딩되어야 합니다. (RegisterAccount.java 참조)
+* 계정 생성 시 포함되는 모든 비밀번호는 API 호출 시 발급된 publicKey 를 통해 암호화 후 전송해야 합니다.
 
 ```javascript
 var codef_account_create_url = 'https://api.codef.io/v1/account/create'
@@ -95,6 +96,20 @@ var codef_account_create_body = {
 
 # CODEF API 호출
 httpSender(codef_account_create_url, token, codef_account_create_body, callback)
+```
+```javascript
+var crypto = require("crypto");
+var constants = require("constants");
+
+function publicEncRSA(publicKey, data) {
+  var pubkeyStr = "-----BEGIN PUBLIC KEY-----\n" + publicKey + "\n-----END PUBLIC KEY-----";
+  var bufferToEncrypt = new Buffer(data);
+  var encryptedData = crypto.publicEncrypt({"key" : pubkeyStr, padding : constants.RSA_PKCS1_PADDING},bufferToEncrypt).toString("base64");
+
+  console.log(encryptedData);
+
+  return encryptedData;
+}
 ```
 ```json
 {
@@ -187,7 +202,7 @@ httpSender(codef_account_add_url, token, codef_account_add_body, callback)
 계정 생성을 통해 발급받은 'connectedId'에 등록된 기관의 인증수단을 변경할 수 있습니다. 변경 요청한 기관의 인증 수단은 호출 즉시 변경되며, 이 후
 'connectedId'를 통해서 대상기관의 데이터를 연동할 수 있습니다.
 
-* API서버를 향한 모든 요청 파라미터는 URLEncoder를 통해 UTF-8로 인코딩되어야 합니다. (RegisterAccount.java 참조)
+* API서버를 향한 모든 요청 파라미터는 URLEncoder를 통해 UTF-8로 인코딩되어야 합니다. (RegisterAccount.js 참조)
 
 ```javascript
 var codef_account_update_url = 'https://api.codef.io/v1/account/update'
@@ -239,7 +254,7 @@ httpSender(codef_account_update_url, token, codef_account_update_body,callback)
 엔드유저가 등록된 계정의 삭제를 요청 시 'connectedId'에 등록된 기관의 인증수단을 즉시 삭제할 수 있습니다. 요청한 기관의 인증 수단은 호출 즉시 삭제되며,
 해당 데이터는 복구할 수 없습니다.
 
-* API서버를 향한 모든 요청 파라미터는 URLEncoder를 통해 UTF-8로 인코딩되어야 합니다. (RegisterAccount.java 참조)
+* API서버를 향한 모든 요청 파라미터는 URLEncoder를 통해 UTF-8로 인코딩되어야 합니다. (RegisterAccount.js 참조)
 
 ```javascript
 codef_account_delete_url = 'https://api.codef.io/v1/account/delete'
