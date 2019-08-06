@@ -417,8 +417,8 @@ httpSender(codef_connectedId_list_url, token, codef_connectedId_list_body)
 
 TestKR_BK_1_B_001.js
 ```javascript
-var codef_url = 'https://tapi.codef.io'
-var token_url = 'https://toauth.codef.io/oauth/token'
+var codef_url = 'https://api.codef.io'
+var token_url = 'https://oauth.codef.io/oauth/token'
 
 // 은행 법인 보유계좌
 var account_list_path = '/v1/kr/bank/b/account/account-list'
