@@ -23,7 +23,7 @@ CODEF API를 사용하기 위해서는 'access_token' 발행이 선행되어야 
 'access_token'을 발급 받기 위한 'client_id' 및 'client_secret'은 https://codef.io/#/account/keys 에서 확인할 수 있습니다.  
 발급받은 access_token은 **모든 CODEF API 호출 시 Headers 에 추가**되어야 합니다. ('Authorization': 'Bearer ' + access_token)
 
-* **access_token은 일주일간 유효**합니다. 데이터베이스나 글로벌 변수에 저장하여 재사용하는 것을 권장합니다. 
+* **access_token은 일주일간 유효**합니다. 데이터베이스나 글로벌 변수에 저장하여 재사용하는 것을 권장합니다.
 * CODEF API를 호출 할 때마다 access_token을 요청하는 것은 퍼포먼스에 부정적입니다.
 * 권장하는 흐름은 다음과 같습니다. [1.토큰 발급 -> 2.토큰 저장 -> 3.저장된 토큰을 이용하여 API 호출 -> 4.토큰이 유효하지 않을경우 토큰 재발급 -> 5.API 재시도]
 
@@ -484,7 +484,78 @@ var codefApiCallback = function(response){
 httpSender(codef_url + account_list_path, token, codef_api_body);
 ```
 ```json
-{"result":{"code":"CF-94002","extraMessage":"","message":"사용자+계정정보+설정에+실패했습니다."},"data":{}}
+{
+	"result": {
+		"code": "CF-00000",
+		"extraMessage": "",
+		"message": "성공",
+		"transactionId": "aedb0cade44f44e48a5f3181c2fe9a96"
+	},
+	"data": {
+		"resAccountEndDate": "",
+		"resLoanLimitAmt": "",
+		"resWithdrawalAmt": "19615",
+		"resAccount": "05300000004040",
+		"resAccountStatus": "활동",
+		"resLoanEndDate": "",
+		"commEndDate": "20190630",
+		"resInterestRate": "",
+		"resAccountName": "OO기업자유예금",
+		"resAccountStartDate": "20130605",
+		"resAccountCurrency": "KRW",
+		"resAccountBalance": "19615",
+		"commStartDate": "20190401",
+		"resTrHistoryList": [
+			{
+				"resAccountTrTime": "095900",
+				"resAccountDesc4": "",
+				"resAccountDesc3": "ｒｎｄ＿오전",
+				"resAccountDesc2": "인터넷",
+				"resAccountDesc1": "（주）OO",
+				"resAccountTrDate": "20190628",
+				"resAccountOut": "1",
+				"resAfterTranBalance": "13634",
+				"resAccountIn": "0"
+			},
+			{
+				"resAccountTrTime": "174603",
+				"resAccountDesc4": "",
+				"resAccountDesc3": "rnd_입금표시1",
+				"resAccountDesc2": "타행이체",
+				"resAccountDesc1": "OO（주）",
+				"resAccountTrDate": "20190627",
+				"resAccountOut": "0",
+				"resAfterTranBalance": "13635",
+				"resAccountIn": "1"
+			},
+			{
+				"resAccountTrTime": "164618",
+				"resAccountDesc4": "",
+				"resAccountDesc3": "rnd_입금표시1",
+				"resAccountDesc2": "타행이체",
+				"resAccountDesc1": "OO（주）",
+				"resAccountTrDate": "20190627",
+				"resAccountOut": "0",
+				"resAfterTranBalance": "13634",
+				"resAccountIn": "1"
+			},
+			{
+				"resAccountTrTime": "092130",
+				"resAccountDesc4": "",
+				"resAccountDesc3": "ｒｎｄ＿오전",
+				"resAccountDesc2": "인터넷",
+				"resAccountDesc1": "（주）OO",
+				"resAccountTrDate": "20190627",
+				"resAccountOut": "1",
+				"resAfterTranBalance": "13633",
+				"resAccountIn": "0"
+			}
+		],
+		"resAccountHolder": "(주)OO",
+		"resManagementBranch": "(0044)북아현동",
+		"resLastTranDate": "20190711"
+	}
+}
 ```
 
 
