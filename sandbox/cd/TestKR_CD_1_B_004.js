@@ -43,7 +43,7 @@ var requestToken = function(url, client_id, client_secret) {
     port: uri.port,
     method: 'POST',
     headers: {
-      'Acceppt': 'application/json',
+      'Accept': 'application/json',
       'Content-Type': 'application/x-www-form-urlencoded',
       'Authorization': 'Basic ' + authHeader
     }
