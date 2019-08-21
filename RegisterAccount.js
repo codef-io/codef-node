@@ -121,7 +121,7 @@ var authTokenCallback = function(response){
 
   // end 이벤트가 감지되면 데이터 수신을 종료하고 내용을 출력한다
   response.on('end', function() {
-    // 데이저 수신 완료
+    // 데이터 수신 완료
     console.log('authTokenCallback body = ' + body);
     token = JSON.parse(body).access_token;
     if(response.statusCode == 200) {
@@ -151,7 +151,7 @@ var codefAccountCreateCallback = function(response){
   response.on('end', function() {
     console.log('codefAccountCreateCallback body:' + urlencode.decode(body));
 
-    // 데이저 수신 완료
+    // 데이터 수신 완료
     if(response.statusCode == 401) {
       // reissue token
       requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
@@ -217,7 +217,7 @@ var authTokenCallback = function(response){
 
   // end 이벤트가 감지되면 데이터 수신을 종료하고 내용을 출력한다
   response.on('end', function() {
-    // 데이저 수신 완료
+    // 데이터 수신 완료
     console.log('authTokenCallback body = ' + body);
     token = JSON.parse(body).access_token;
     if(response.statusCode == 200) {
@@ -247,7 +247,7 @@ var codefAccountAddCallback = function(response){
   response.on('end', function() {
     console.log('codefAccountAddCallback body:' + urlencode.decode(body));
 
-    // 데이저 수신 완료
+    // 데이터 수신 완료
     if(response.statusCode == 401) {
       // reissue token
       requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
@@ -309,7 +309,7 @@ var authTokenCallback = function(response){
 
   // end 이벤트가 감지되면 데이터 수신을 종료하고 내용을 출력한다
   response.on('end', function() {
-    // 데이저 수신 완료
+    // 데이터 수신 완료
     console.log('authTokenCallback body = ' + body);
     token = JSON.parse(body).access_token;
     if(response.statusCode == 200) {
@@ -339,7 +339,7 @@ var codefAccountUpdateCallback = function(response){
   response.on('end', function() {
     console.log('codefAccountUpdateCallback body:' + urlencode.decode(body));
 
-    // 데이저 수신 완료
+    // 데이터 수신 완료
     if(response.statusCode == 401) {
       // reissue token
       requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
@@ -402,7 +402,7 @@ var authTokenCallback = function(response){
 
   // end 이벤트가 감지되면 데이터 수신을 종료하고 내용을 출력한다
   response.on('end', function() {
-    // 데이저 수신 완료
+    // 데이터 수신 완료
     console.log('authTokenCallback body = ' + body);
     token = JSON.parse(body).access_token;
     if(response.statusCode == 200) {
@@ -432,7 +432,7 @@ var codefAccountDeleteCallback = function(response){
   response.on('end', function() {
     console.log('codefAccountDeleteCallback body:' + urlencode.decode(body));
 
-    // 데이저 수신 완료
+    // 데이터 수신 완료
     if(response.statusCode == 401) {
       // reissue token
       requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
