@@ -31,7 +31,7 @@ var httpSender = function(url, token, body, callback) {
 }
 // ========== HTTP 함수  ==========
 
-// ========== Toekn 재발급  ==========
+// ========== Token 재발급  ==========
 var requestToken = function(url, client_id, client_secret, callback) {
   var uri = parse(url)
 
@@ -51,7 +51,7 @@ var requestToken = function(url, client_id, client_secret, callback) {
   request.write('grant_type=client_credentials&scope=read');
   request.end();
 }
-// ========== Toekn 재발급  ==========
+// ========== Token 재발급  ==========
 
 // ========== public Encrypt  ==========
 function publicEncRSA(publicKey, data) {
