@@ -469,7 +469,7 @@ var codefApiCallback = function(response){
   response.on('end', function() {
     console.log('codefApiCallback body:' + urlencode.decode(body));
 
-    // 데이저 수신 완료
+    // 데이터 수신 완료
     if(response.statusCode == 200) {
       console.log('정상처리');
     } else if(response.statusCode == 401) {
