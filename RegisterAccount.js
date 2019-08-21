@@ -92,7 +92,7 @@ pubKey = 'CODEF로부터 발급받은 publicKey';
 //   keyFile : 인증서 keyFile
 //
 //////////////////////////////////////////////////////////////////////////////
-var codefAccountCreateUrl = 'https://tapi.codef.io/v1/account/create';
+var codefAccountCreateUrl = 'https://api.codef.io/v1/account/create';
 var codefAccountCreateBody = {
             'accountList':[
                 {
@@ -187,7 +187,7 @@ httpSender(codefAccountCreateUrl, token, codefAccountCreateBody, codefAccountCre
 //   keyFile : 인증서 keyFile
 //
 //////////////////////////////////////////////////////////////////////////////
-var codefAccountAddUrl = 'https://tapi.codef.io/v1/account/add'
+var codefAccountAddUrl = 'https://api.codef.io/v1/account/add'
 var codefAccountAddBody = {
             'connectedId': '8-cXc.6lk-ib4Whi5zClVt',    // connected_id
             'accountList':[
@@ -253,7 +253,7 @@ var codefAccountAddCallback = function(response){
       requestToken(tokenUrl, 'CODEF로부터 발급받은 클라이언트 아이디', 'CODEF로부터 발급받은 시크릿 키', authTokenCallback);
     } else {
       var dict = JSON.parse(urlencode.decode(body))
-      console.log('계정생성 정상처리');
+      console.log('계정추가 정상처리');
     }
   });
 }
@@ -280,7 +280,7 @@ httpSender(codefAccountAddUrl, token, codefAccountAddBody, codefAccountAddCallba
 //   keyFile : 인증서 keyFile
 //
 //////////////////////////////////////////////////////////////////////////////
-var codefAccountUpdateUrl = 'https://tapi.codef.io/v1/account/update'
+var codefAccountUpdateUrl = 'https://api.codef.io/v1/account/update'
 var codefAccountUpdateBody = {
             'connectedId': '8-cXc.6lk-ib4Whi5zClVt',    // connected_id
             'accountList':[
@@ -348,7 +348,7 @@ var codefAccountUpdateCallback = function(response){
 
       connectedId = dict.data.connectedId;
       console.log('connectedId = ' + connectedId);
-      console.log('계정생성 정상처리');
+      console.log('계정수정 정상처리');
     }
   });
 }
@@ -375,7 +375,7 @@ httpSender(codefAccountUpdateUrl, token, codefAccountUpdateBody, codefAccountUpd
 //   keyFile : 인증서 keyFile
 //
 //////////////////////////////////////////////////////////////////////////////
-var codefAccountDeleteUrl = 'https://tapi.codef.io/v1/account/delete'
+var codefAccountDeleteUrl = 'https://api.codef.io/v1/account/delete'
 var codefAccountDeleteBody = {
             'connectedId': '8-cXc.6lk-ib4Whi5zClVt',    // connected_id
             'accountList':[
@@ -441,7 +441,7 @@ var codefAccountDeleteCallback = function(response){
 
       connectedId = dict.data.connectedId;
       console.log('connectedId = ' + connectedId);
-      console.log('계정생성 정상처리');
+      console.log('계정삭제 정상처리');
     }
   });
 }
