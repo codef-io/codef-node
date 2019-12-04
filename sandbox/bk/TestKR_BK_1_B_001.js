@@ -55,7 +55,7 @@ var requestToken = function(url, client_id, client_secret) {
 
 // API서버 샌드박스 도메인
 var CODEF_URL = 'https://tsandbox.codef.io';
-var TOKEN_URL = 'https://toauth.codef.io/oauth/token';
+var TOKEN_URL = 'https://oauth.codef.io/oauth/token';
 var SANDBOX_CLIENT_ID 	= "ef27cfaa-10c1-4470-adac-60ba476273f9";      // CODEF 샌드박스 클라이언트 아이디
 var SANDBOX_SECERET_KEY 	= "83160c33-9045-4915-86d8-809473cdf5c3";    // CODEF 샌드박스 클라이언트 시크릿
 

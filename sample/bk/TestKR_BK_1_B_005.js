@@ -53,8 +53,8 @@ var requestToken = function(url, client_id, client_secret) {
 }
 // ========== Toekn 재발급  ==========
 
-var codef_url = 'https://tapi.codef.io'
-var token_url = 'https://toauth.codef.io/oauth/token'
+var codef_url = 'https://development.codef.io'
+var token_url = 'https://oauth.codef.io/oauth/token'
 
 // 은행 법인 외화 거래내역
 var transaction_list_path = '/v1/kr/bank/b/exchange/transaction-list'
