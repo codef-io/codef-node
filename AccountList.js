@@ -28,7 +28,7 @@ var httpSender = function(url, token, body) {
     },
     codefApiCallback
   );
-  request.write(JSON.stringify(body));
+  request.write(urlencode.encode(JSON.stringify(body)));
   request.end();
 };
 // ========== HTTP 함수  ==========
